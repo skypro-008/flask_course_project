@@ -12,7 +12,7 @@ class BaseConfig:
     TOKEN_EXPIRE_DAYS = 130
 
     PWD_HASH_SALT: bytes = base64.b64decode(os.getenv('HASH_SALT', 'salt'))
-    PWD_HASH_ITERATIONS = 100_000
+    PWD_HASH_ITERATIONS: int = 100_000
 
 
 class TestingConfig(BaseConfig):
