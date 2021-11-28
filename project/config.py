@@ -24,6 +24,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TOKEN_EXPIRE_MINUTES = 1
     TOKEN_EXPIRE_DAYS = 5
+    SQLALCHEMY_ECHO = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'app.db')
 
 

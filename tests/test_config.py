@@ -22,6 +22,7 @@ def test_development():
     assert app_config['TOKEN_EXPIRE_DAYS'] == 5
     assert app_config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///' + os.path.join(BASEDIR, 'app.db')
     assert app_config['SQLALCHEMY_TRACK_MODIFICATIONS'] is False
+    assert app_config['SQLALCHEMY_ECHO'] is True
 
 
 def test_production():
@@ -32,6 +33,7 @@ def test_production():
     assert app_config['TOKEN_EXPIRE_DAYS'] == 130
     assert app_config['SQLALCHEMY_DATABASE_URI'] == os.getenv('DATABASE_URL')
     assert app_config['SQLALCHEMY_TRACK_MODIFICATIONS'] is False
+    assert app_config['SQLALCHEMY_ECHO'] is False
 
 
 def test_default():
