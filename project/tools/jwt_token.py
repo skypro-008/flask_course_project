@@ -31,3 +31,9 @@ class JwtToken:
     @staticmethod
     def decode_token(token: str) -> Dict[str, Any]:
         return jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+
+    def get_tokens(self) -> Dict[str, str]:
+        return {
+            'access_token': self.access_token,
+            'refresh_token': self.refresh_token,
+        }

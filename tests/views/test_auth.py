@@ -2,43 +2,62 @@ from http import HTTPStatus
 
 import pytest
 
-from project.exceptions import UserAlreadyExists
-from project.tools.enums import UserRole
+from project.dao import UserDAO
+from project.exceptions import InvalidCredentials, UserAlreadyExists
+from project.tools.security import generate_password_hash
+from tests.utils import send_form_request
 
 
-class TestRegisterUser:
-    valid_data = {
-        'email': 'new_user@email.com',
-        'password': 'test1234',
-        'role': UserRole.employer.value
-    }
-
-    def collect_data(self, email=None, password=None, role=None):
-        return f"email={email}&password={password}&role={role}"
-
-    def register_user(self, test_client, data):
-        return test_client.post(
-            '/auth/register', data=data,
-            content_type="application/x-www-form-urlencoded",
-        )
+class TestRegisterUserView:
+    url = '/auth/register'
 
     def test_view(self, client):
-        response = self.register_user(client, self.collect_data(**self.valid_data))
+        response = send_form_request(client, 'post', self.url, {'email': 'test@example.com', 'password': 'test123'})
         assert response.status_code == HTTPStatus.CREATED
         assert response.json is None
 
-    @pytest.mark.parametrize('data', (
-        {'email': 'test'},
-        {'role': 'some_role'},
-    ))
-    def test_bad_request(self, client, data):
-        valid_data = self.valid_data.copy()
-        valid_data.update(data)
-        response = self.register_user(client, self.collect_data(**valid_data))
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+    def test_bad_request(self, client):
+        assert send_form_request(
+            client, 'post', self.url, {'email': 'invalid_email_address', 'password': 'test123'}
+        ).status_code == HTTPStatus.BAD_REQUEST
 
     def test_user_already_exists(self, db, client):
-        self.register_user(client, self.collect_data(**self.valid_data))
-        response = self.register_user(client, self.collect_data(**self.valid_data))
-        assert response.status_code == HTTPStatus.CONFLICT
-        assert response.json == {'message': UserAlreadyExists.message}
+        form_data = {'email': 'test@example.com', 'password': 'test123'}
+
+        response_1 = send_form_request(client, 'post', self.url, form_data)
+        assert response_1.status_code == HTTPStatus.CREATED
+
+        response_2 = send_form_request(client, 'post', self.url, form_data)
+        assert response_2.status_code == UserAlreadyExists.code
+        assert response_2.json == UserAlreadyExists.message
+
+
+class LoginUserView:
+    url = '/auth/login'
+
+    @pytest.fixture
+    def credentials(self):
+        return {'email': 'test@test.com', 'password': 'test123'}
+
+    @pytest.fixture
+    def user(self, db, credentials):
+        return UserDAO(db.session).create(
+            email=credentials['email'],
+            password=generate_password_hash(credentials['password'])
+        )
+
+    def test_success_login(self, client, user, credentials):
+        response = send_form_request(client, 'post', self.url, credentials)
+        assert response.status_code == HTTPStatus.CREATED
+        assert {'access_token', 'refresh_token'} == response.json.keys()
+
+    def test_user_not_found(self, client, credentials):
+        response = send_form_request(client, 'post', self.url, credentials)
+        assert response.status_code == InvalidCredentials.code
+        assert response.json == InvalidCredentials.message
+
+    def test_invalid_password(self, client, user, credentials):
+        credentials['password'] = credentials['password'] * 2
+        response = send_form_request(client, 'post', self.url, credentials)
+        assert response.status_code == InvalidCredentials.code
+        assert response.json == InvalidCredentials.message

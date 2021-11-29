@@ -11,8 +11,12 @@ class BaseConfig:
     TOKEN_EXPIRE_MINUTES = 15
     TOKEN_EXPIRE_DAYS = 130
 
+    BUNDLE_ERRORS = True
+
     PWD_HASH_SALT: bytes = base64.b64decode(os.getenv('HASH_SALT', 'salt'))
     PWD_HASH_ITERATIONS: int = 100_000
+
+    RESTX_VALIDATE = True
 
 
 class TestingConfig(BaseConfig):

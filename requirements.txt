@@ -3,7 +3,6 @@ flask-restx~=0.5.1
 Flask-CORS~=3.0.10
 Flask-SQLAlchemy~=2.5.1
 marshmallow~=3.14.1
-marshmallow_enum~=1.5.1
 PyJWT~=2.3.0
 pytest
 freezegun
