@@ -14,7 +14,7 @@ class JwtToken:
         self._access_token_expiration = current_app.config['TOKEN_EXPIRE_MINUTES']
         self._refresh_token_expiration = current_app.config['TOKEN_EXPIRE_DAYS']
 
-    def __get__token(self, time_delta: timedelta):
+    def _get__token(self, time_delta: timedelta):
         self._data.update({
             'exp': timegm((self._now + time_delta).timetuple())
         })
@@ -22,11 +22,11 @@ class JwtToken:
 
     @property
     def access_token(self) -> str:
-        return self.__get__token(timedelta(minutes=self._access_token_expiration))
+        return self._get__token(timedelta(minutes=self._access_token_expiration))
 
     @property
     def refresh_token(self) -> str:
-        return self.__get__token(timedelta(days=self._refresh_token_expiration))
+        return self._get__token(timedelta(days=self._refresh_token_expiration))
 
     @staticmethod
     def decode_token(token: str) -> Dict[str, Any]:
