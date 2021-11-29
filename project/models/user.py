@@ -1,6 +1,6 @@
-from project.enums import UserRole
+from project.tools.enums import UserRole
 from project.models import BaseMixin
-from project.server import db
+from project.tools.setup_db import db
 
 
 class User(BaseMixin, db.Model):
