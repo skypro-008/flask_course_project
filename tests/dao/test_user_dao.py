@@ -1,4 +1,5 @@
 import pytest
+from marshmallow import ValidationError
 
 from project.dao import UserDAO
 from project.exceptions import UserAlreadyExists
@@ -25,3 +26,10 @@ class TestUserDAO:
                     email='test@test.com',
                     password='password'
                 )
+
+    def test_validation_error(self, db):
+        with pytest.raises(ValidationError):
+            UserDAO(db.session).create(
+                email='test',
+                password='qwerty',
+            )

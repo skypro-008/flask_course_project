@@ -5,7 +5,7 @@ from jwt import PyJWTError
 
 from project.exceptions import BaseProjectException
 from project.services.auth import CheckUserCredentialsService, RegisterNewUserService
-from project.services.schemas import UserSchema
+from project.schemas import UserSchema
 from project.tools.jwt_token import JwtToken
 from project.tools.setup_db import db
 from project.views.dto import auth_parser, login_parser

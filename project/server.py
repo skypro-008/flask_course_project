@@ -2,8 +2,8 @@ from flask import Flask
 from flask_restx import Api
 
 from project.config import get_config
-from project.views.auth import auth_ns
 from project.tools.setup_db import db
+from project.views import auth_ns
 
 api = Api()
 

@@ -9,3 +9,4 @@ class User(BaseMixin, db.Model):
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(50), nullable=True)
     surname = db.Column(db.String(50), nullable=True)
+    favourite_genre = db.Column(db.Integer, db.ForeignKey('genres.id'), nullable=True)
