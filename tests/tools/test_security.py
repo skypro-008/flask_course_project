@@ -1,4 +1,4 @@
-from project.tools.security import compare_passwords, generate_password_hash
+from project.utils.security import compare_passwords, generate_password_hash
 
 
 class TestSecurity:

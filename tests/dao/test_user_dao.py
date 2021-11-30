@@ -2,7 +2,7 @@ import pytest
 from marshmallow import ValidationError
 
 from project.dao import UserDAO
-from project.exceptions import UserAlreadyExists
+from project.tools.exceptions import UserAlreadyExists
 from project.models import User
 
 

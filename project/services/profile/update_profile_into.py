@@ -1,7 +1,7 @@
 from project.dao import GenreDAO, UserDAO
-from project.exceptions import GenreNotFound
-from project.schemas import UserSchema
-from project.tools.service import BaseService
+from project.tools.exceptions import GenreNotFound
+from project.tools.schemas import UserSchema
+from project.services import BaseService
 
 
 class UpdateProfileInfoService(BaseService):

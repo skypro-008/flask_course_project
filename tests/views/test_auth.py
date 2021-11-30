@@ -4,8 +4,8 @@ import pytest
 from freezegun import freeze_time
 
 from project.dao import UserDAO
-from project.exceptions import InvalidCredentials, UserAlreadyExists
-from project.tools.security import generate_password_hash
+from project.tools.exceptions import InvalidCredentials, UserAlreadyExists
+from project.utils.security import generate_password_hash
 from tests.utils import send_form_request
 
 

@@ -4,16 +4,19 @@ from flask_restx import Namespace, Resource
 
 from project.services.profile import ChangeUserPasswordService, GetUserService, UpdateProfileInfoService
 from project.tools.setup_db import db
+from project.utils.auth import login_required
 from project.views.dto import change_password_parser, change_user_info_parser
 
 user_ns = Namespace('user', validate=True)
 
 
+@user_ns.doc(security='Bearer')
 @user_ns.route('/<int:pk>')
 class UserProfileView(Resource):
 
     @user_ns.response(int(HTTPStatus.OK), 'OK')
     @user_ns.response(int(HTTPStatus.NOT_FOUND), 'User not found')
+    @login_required
     def get(self, pk: int):
         """ Get user profile. """
         return GetUserService(db.session).execute(pk)
@@ -29,6 +32,7 @@ class UserProfileView(Resource):
         return UpdateProfileInfoService(db.session).execute(pk, **change_user_info_parser.parse_args())
 
 
+@user_ns.doc(security='Bearer')
 @user_ns.route('/<int:pk>/setpassword')
 class ChangePasswordView(Resource):
     @user_ns.expect(change_password_parser)
@@ -38,3 +42,4 @@ class ChangePasswordView(Resource):
     def put(self, pk: int):
         """ Change user password """
         ChangeUserPasswordService(db.session).execute(pk=pk, **change_password_parser.parse_args())
+        return None, HTTPStatus.OK

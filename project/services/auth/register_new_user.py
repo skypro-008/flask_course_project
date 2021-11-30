@@ -1,6 +1,6 @@
 from project.dao import UserDAO
-from project.tools.security import generate_password_hash
-from project.tools.service import BaseService
+from project.utils.security import generate_password_hash
+from project.services import BaseService
 
 
 class RegisterNewUserService(BaseService):

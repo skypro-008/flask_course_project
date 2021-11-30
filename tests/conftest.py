@@ -1,7 +1,10 @@
 import pytest
 
+from project.dao import UserDAO
 from project.server import create_app
 from project.tools.setup_db import db as database
+from project.utils.jwt_token import JwtToken
+from project.utils.security import generate_password_hash
 
 
 @pytest.fixture
@@ -27,3 +30,17 @@ def db(app):
 def client(app, db):
     with app.test_client() as client:
         yield client
+
+
+@pytest.fixture
+def user(db):
+    return UserDAO(db.session).create(
+        email='test@test.com',
+        password=generate_password_hash('test123')
+    )
+
+
+@pytest.fixture
+def login_headers(client, user):
+    access_token = JwtToken({}).access_token
+    return {'Authorization': f'Bearer {access_token}'}

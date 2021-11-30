@@ -1,7 +1,7 @@
 from project.dao import UserDAO
-from project.exceptions import UserNotFound
-from project.schemas import UserSchema
-from project.tools.service import BaseService
+from project.tools.exceptions import UserNotFound
+from project.tools.schemas import UserSchema
+from project.services import BaseService
 
 
 class GetUserService(BaseService):

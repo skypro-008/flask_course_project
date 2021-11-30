@@ -1,11 +1,11 @@
 from typing import Dict
 
 from project.dao import UserDAO
-from project.exceptions import InvalidCredentials
-from project.schemas import UserSchema
-from project.tools.jwt_token import JwtToken
-from project.tools.security import compare_passwords
-from project.tools.service import BaseService
+from project.tools.exceptions import InvalidCredentials
+from project.tools.schemas import UserSchema
+from project.utils.jwt_token import JwtToken
+from project.utils.security import compare_passwords
+from project.services import BaseService
 
 
 class CheckUserCredentialsService(BaseService):

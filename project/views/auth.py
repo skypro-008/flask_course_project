@@ -4,7 +4,7 @@ from flask_restx import fields, Namespace, Resource
 from jwt import PyJWTError
 
 from project.services.auth import CheckUserCredentialsService, RegisterNewUserService
-from project.tools.jwt_token import JwtToken
+from project.utils.jwt_token import JwtToken
 from project.tools.setup_db import db
 from project.views.dto import auth_parser, login_parser
 

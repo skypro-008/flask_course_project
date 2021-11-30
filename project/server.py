@@ -6,11 +6,22 @@ from flask_restx import Api
 from marshmallow import ValidationError
 
 from project.config import get_config
-from project.exceptions import BaseProjectException
+from project.tools.exceptions import BaseProjectException
 from project.tools.setup_db import db
 from project.views import auth_ns, user_ns
 
-api = Api()
+api = Api(
+    authorizations={
+        'Bearer': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+    title='Flask API',
+    description='Welcome to the Swagger UI documentation site!',
+    doc='/ui'
+)
 
 
 def create_app(config_name: str):

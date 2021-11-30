@@ -1,7 +1,7 @@
 from typing import Optional
 
 from project.models import Genre
-from project.tools.dao import BaseDAO
+from project.dao import BaseDAO
 
 
 class GenreDAO(BaseDAO):

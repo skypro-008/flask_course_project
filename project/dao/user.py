@@ -2,10 +2,10 @@ from typing import Optional
 
 from sqlalchemy.exc import IntegrityError
 
-from project.exceptions import UserAlreadyExists, UserNotFound
+from project.tools.exceptions import UserAlreadyExists, UserNotFound
 from project.models import User
-from project.schemas import UserSchema
-from project.tools.dao import BaseDAO
+from project.tools.schemas import UserSchema
+from project.dao import BaseDAO
 
 
 class UserDAO(BaseDAO):

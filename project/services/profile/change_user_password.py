@@ -1,7 +1,7 @@
 from project.dao import UserDAO
-from project.exceptions import PasswordsMismatch
-from project.tools.security import generate_password_hash
-from project.tools.service import BaseService
+from project.tools.exceptions import PasswordsMismatch
+from project.utils.security import generate_password_hash
+from project.services import BaseService
 
 
 class ChangeUserPasswordService(BaseService):

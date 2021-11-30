@@ -4,7 +4,7 @@ import pytest
 from freezegun import freeze_time
 from jwt.exceptions import PyJWTError
 
-from project.tools.jwt_token import JwtToken
+from project.utils.jwt_token import JwtToken
 
 
 class TestJwtToken:
