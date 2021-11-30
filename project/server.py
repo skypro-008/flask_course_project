@@ -1,7 +1,9 @@
 import logging
+from http import HTTPStatus
 
 from flask import Flask
 from flask_restx import Api
+from marshmallow import ValidationError
 
 from project.config import get_config
 from project.exceptions import BaseProjectException
@@ -25,5 +27,10 @@ def create_app(config_name: str):
     @api.errorhandler(BaseProjectException)
     def handle_validation_error(error):
         return error.message, error.code
+
+    @api.errorhandler(ValidationError)
+    def handle_validation_error(error):
+        api.logger.info(error.messages)
+        return {'message': 'Validation Error'}, HTTPStatus.BAD_REQUEST
 
     return app

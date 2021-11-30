@@ -25,3 +25,13 @@ class InvalidCredentials(BaseProjectException):
 class UserNotFound(BaseProjectException):
     _message = 'User not found'
     code = status.NOT_FOUND
+
+
+class PasswordsMismatch(BaseProjectException):
+    _message = 'Passwords mismatch'
+    code = status.BAD_REQUEST
+
+
+class GenreNotFound(BaseProjectException):
+    _message = 'Genre not found'
+    code = status.NOT_FOUND

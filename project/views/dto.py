@@ -8,3 +8,12 @@ auth_parser.add_argument(name='password', type=str, required=True, nullable=Fals
 login_parser = RequestParser()
 login_parser.add_argument(name='email', type=email(), required=True, nullable=False)
 login_parser.add_argument(name='password', type=str, required=True, nullable=False)
+
+change_password_parser = RequestParser()
+change_password_parser.add_argument(name='password_1', type=str, required=True, nullable=False)
+change_password_parser.add_argument(name='password_2', type=str, required=True, nullable=False)
+
+change_user_info_parser = RequestParser()
+change_user_info_parser.add_argument(name='name', type=str, required=False)
+change_user_info_parser.add_argument(name='surname', type=str, required=False)
+change_user_info_parser.add_argument(name='favourite_genre', type=int, required=False)
