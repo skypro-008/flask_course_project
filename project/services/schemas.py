@@ -7,3 +7,4 @@ class UserSchema(Schema):
     password = Str(required=True, load_only=True)
     name = Str()
     surname = Str()
+

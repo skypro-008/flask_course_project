@@ -37,7 +37,7 @@ class RegisterUserView(Resource):
 @auth_ns.route('/login')
 class LoginUserView(Resource):
     @auth_ns.expect(login_parser)
-    @auth_ns.response(int(HTTPStatus.CREATED), 'Created', tokens)
+    @auth_ns.response(int(HTTPStatus.OK), 'Ok', tokens)
     @auth_ns.response(int(HTTPStatus.UNAUTHORIZED), 'Invalid credentials')
     @auth_ns.response(int(HTTPStatus.BAD_REQUEST), 'Validation error')
     def post(self):
@@ -45,7 +45,7 @@ class LoginUserView(Resource):
         try:
             return JwtToken(UserSchema().dump(
                 CheckUserCredentialsService(db.session).execute(**login_parser.parse_args())
-            )).get_tokens(), HTTPStatus.CREATED
+            )).get_tokens(), HTTPStatus.OK
         except BaseProjectException as e:
             return e.message, e.code
 

@@ -11,7 +11,7 @@ class CheckUserCredentialsService(BaseService):
         if not (user := UserDAO(self._db_session).get_user_by_email(email)):
             raise InvalidCredentials
 
-        if not compare_passwords(user.password_hash, password):
+        if not compare_passwords(user.password, password):
             raise InvalidCredentials
 
         return user
