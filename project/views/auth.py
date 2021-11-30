@@ -3,9 +3,7 @@ from http import HTTPStatus
 from flask_restx import fields, Namespace, Resource
 from jwt import PyJWTError
 
-from project.exceptions import BaseProjectException
 from project.services.auth import CheckUserCredentialsService, RegisterNewUserService
-from project.schemas import UserSchema
 from project.tools.jwt_token import JwtToken
 from project.tools.setup_db import db
 from project.views.dto import auth_parser, login_parser
@@ -27,27 +25,19 @@ class RegisterUserView(Resource):
     @auth_ns.response(int(HTTPStatus.BAD_REQUEST), 'Validation error')
     def post(self):
         """ Register a new user """
-        try:
-            RegisterNewUserService(db.session).execute(**auth_parser.parse_args())
-            return None, HTTPStatus.CREATED
-        except BaseProjectException as e:
-            return e.message, e.code
+        RegisterNewUserService(db.session).execute(**auth_parser.parse_args())
+        return None, HTTPStatus.CREATED
 
 
 @auth_ns.route('/login')
 class LoginUserView(Resource):
     @auth_ns.expect(login_parser)
-    @auth_ns.response(int(HTTPStatus.OK), 'Ok', tokens)
+    @auth_ns.response(int(HTTPStatus.OK), 'OK', tokens)
     @auth_ns.response(int(HTTPStatus.UNAUTHORIZED), 'Invalid credentials')
     @auth_ns.response(int(HTTPStatus.BAD_REQUEST), 'Validation error')
     def post(self):
         """ Authenticate user and send access and refresh tokens """
-        try:
-            return JwtToken(UserSchema().dump(
-                CheckUserCredentialsService(db.session).execute(**login_parser.parse_args())
-            )).get_tokens(), HTTPStatus.OK
-        except BaseProjectException as e:
-            return e.message, e.code
+        return CheckUserCredentialsService(db.session).execute(**login_parser.parse_args()), HTTPStatus.OK
 
     @auth_ns.expect(tokens)
     @auth_ns.response(int(HTTPStatus.OK), 'Updated', tokens)

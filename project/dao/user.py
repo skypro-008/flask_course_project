@@ -10,6 +10,9 @@ from project.tools.dao import BaseDAO
 
 class UserDAO(BaseDAO):
 
+    def get_user_by_id(self, pk: int) -> Optional[User]:
+        return self._db_session.query(User).filter(User.id == pk).one_or_none()
+
     def get_user_by_email(self, email: str) -> Optional[User]:
         return self._db_session.query(User).filter(User.email == email).one_or_none()
 

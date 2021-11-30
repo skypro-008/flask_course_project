@@ -12,6 +12,8 @@ from project.models import Director, Genre, Movie, User
 class BaseSchema(Schema):
     __model__: Type[Model] = NotImplemented
 
+    id = Int(dump_only=True)
+
     @post_load
     def make_object(self, data, **kwargs):
         return self.__model__(**data)
@@ -50,3 +52,4 @@ class UserSchema(BaseSchema):
     name = Str()
     surname = Str()
     favourite_genre = Nested(GenreSchema, dump_only=True)
+    favorites = Nested(MovieSchema(only=('id',)), dump_only=True)

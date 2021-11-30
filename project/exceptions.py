@@ -1,5 +1,5 @@
-from typing import Dict
 from http import HTTPStatus as status
+from typing import Dict
 
 
 class BaseProjectException(Exception):
@@ -20,3 +20,8 @@ class UserAlreadyExists(BaseProjectException):
 class InvalidCredentials(BaseProjectException):
     _message = 'Invalid email or password'
     code = status.UNAUTHORIZED
+
+
+class UserNotFound(BaseProjectException):
+    _message = 'User not found'
+    code = status.NOT_FOUND
