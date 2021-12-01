@@ -17,9 +17,13 @@ api = Api(
             'name': 'Authorization'
         }
     },
-    title='Flask API',
+    title='Flask Course Project 3',
     description='Welcome to the Swagger UI documentation site!',
-    doc='/ui'
+    doc='/ui',
+    contact_email='painassasin@icloud.com',
+    contact_url='https://github.com/painassasin',
+    version='1.2',
+
 )
 cors = CORS()
 
