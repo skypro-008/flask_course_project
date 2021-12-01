@@ -1,4 +1,7 @@
 import os
+from contextlib import suppress
+
+from sqlalchemy.exc import IntegrityError
 
 from project.models import Director, Genre, Movie
 from project.server import create_app
@@ -28,4 +31,5 @@ with app.app_context():
             director_id=movie['director_id']
         ))
 
-    db.session.commit()
+    with suppress(IntegrityError):
+        db.session.commit()
