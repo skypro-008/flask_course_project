@@ -27,9 +27,6 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 --exclude venv --max-line-length=120
-    - name: Lint with mypy
-      run: |
-        mypy .
     - name: Test app and enerate Report
       run: |
         coverage run -m unittest -vv
