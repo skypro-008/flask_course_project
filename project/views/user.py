@@ -44,30 +44,3 @@ class ChangePasswordView(Resource):
         return None, HTTPStatus.OK
 
 
-@user_ns.doc(security='Bearer')
-@user_ns.route('/favorites/<int:movie_id>')
-class ManageFavoriteView(Resource):
-
-    @user_ns.response(int(HTTPStatus.OK), 'OK')
-    @user_ns.response(int(HTTPStatus.NOT_FOUND), 'Movie not found')
-    @login_required
-    def post(self, user_id: int, movie_id: int):
-        FavoritesService(db.session).add(user_id, movie_id)
-        return None, HTTPStatus.OK
-
-    @user_ns.response(int(HTTPStatus.NO_CONTENT), 'Deleted')
-    @user_ns.response(int(HTTPStatus.NOT_FOUND), 'Movie not found')
-    @login_required
-    def delete(self, user_id: int, movie_id: int):
-        return FavoritesService(db.session).delete(user_id, movie_id), HTTPStatus.NO_CONTENT
-
-
-@user_ns.doc(security='Bearer')
-@user_ns.route('/favorites')
-class FavoritesView(Resource):
-
-    @user_ns.expect(pages_parser)
-    @user_ns.response(int(HTTPStatus.OK), 'OK')
-    @login_required
-    def get(self, user_id: int):
-        return FavoritesService(db.session).get_all(user_id, **pages_parser.parse_args()), HTTPStatus.OK
