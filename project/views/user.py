@@ -2,11 +2,11 @@ from http import HTTPStatus
 
 from flask_restx import Namespace, Resource
 
-from project.services.profile import ChangeUserPasswordService, FavoritesService, GetUserService, \
+from project.services.profile import ChangeUserPasswordService, GetUserService, \
     UpdateProfileInfoService
 from project.tools.setup_db import db
 from project.utils.auth import login_required
-from project.views.dto import change_password_parser, change_user_info_parser, pages_parser
+from project.views.dto import change_password_parser, change_user_info_parser
 
 user_ns = Namespace('user', validate=True)
 
@@ -42,5 +42,3 @@ class ChangePasswordView(Resource):
         """ Обновить пароль пользователя """
         ChangeUserPasswordService(db.session).execute(user_id=user_id, **change_password_parser.parse_args())
         return None, HTTPStatus.OK
-
-
