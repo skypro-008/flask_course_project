@@ -7,6 +7,7 @@ PyJWT~=2.3.0
 gunicorn~=20.1.0
 psycopg2~=2.9.2
 pytest
+pytest-cov
 freezegun
 flake8
 mypy
