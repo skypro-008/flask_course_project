@@ -6,34 +6,42 @@ from freezegun import freeze_time
 from project.dao import UserDAO
 from project.tools.exceptions import InvalidCredentials, UserAlreadyExists
 from project.utils.security import generate_password_hash
-from tests.utils import send_form_request
 
 
-class TestRegisterUserView:
+class FormMixin:
+    url: str = '/auth'
+
+    def send_form_request(self, test_client, method: str, json_data: dict):
+        return getattr(test_client, method)(
+            self.url, data='&'.join([f'{k}={v}' for k, v in json_data.items()]),
+            content_type="application/x-www-form-urlencoded"
+        )
+
+
+class TestRegisterUserView(FormMixin):
     url = '/auth/register'
 
     def test_view(self, client):
-        response = send_form_request(client, 'post', self.url, {'email': 'test@example.com', 'password': 'test123'})
+        response = self.send_form_request(client, 'post', {'email': 'test@example.com', 'password': 'test123'})
         assert response.status_code == HTTPStatus.CREATED
         assert response.json is None
 
     def test_bad_request(self, client):
-        assert send_form_request(
-            client, 'post', self.url, {'email': 'invalid_email_address', 'password': 'test123'}
-        ).status_code == HTTPStatus.BAD_REQUEST
+        response = self.send_form_request(client, 'post', {'email': 'invalid_email_address', 'password': 'test123'})
+        assert response.status_code == HTTPStatus.BAD_REQUEST
 
     def test_user_already_exists(self, db, client):
         form_data = {'email': 'test@example.com', 'password': 'test123'}
 
-        response_1 = send_form_request(client, 'post', self.url, form_data)
+        response_1 = self.send_form_request(client, 'post', form_data)
         assert response_1.status_code == HTTPStatus.CREATED
 
-        response_2 = send_form_request(client, 'post', self.url, form_data)
+        response_2 = self.send_form_request(client, 'post', form_data)
         assert response_2.status_code == UserAlreadyExists.code
         assert response_2.json == UserAlreadyExists.message
 
 
-class TestLoginUserView:
+class TestLoginUserView(FormMixin):
     url = '/auth/login'
 
     @pytest.fixture
@@ -48,25 +56,25 @@ class TestLoginUserView:
         )
 
     def test_success_login(self, client, user, credentials):
-        response = send_form_request(client, 'post', self.url, credentials)
+        response = self.send_form_request(client, 'post', credentials)
         assert response.status_code == HTTPStatus.OK
         assert {'access_token', 'refresh_token', 'user_id'} == response.json.keys()
 
     def test_user_not_found(self, client, credentials):
-        response = send_form_request(client, 'post', self.url, credentials)
+        response = self.send_form_request(client, 'post', credentials)
         assert response.status_code == InvalidCredentials.code
         assert response.json == InvalidCredentials.message
 
     def test_invalid_password(self, client, user, credentials):
         credentials['password'] = credentials['password'] * 2
-        response = send_form_request(client, 'post', self.url, credentials)
+        response = self.send_form_request(client, 'post', credentials)
         assert response.status_code == InvalidCredentials.code
         assert response.json == InvalidCredentials.message
 
     def test_update_token_success(self, client, user, credentials):
         @freeze_time('2021-06-30T10:30:20')
         def post_response(data) -> dict:
-            response = send_form_request(client, 'post', self.url, data)
+            response = self.send_form_request(client, 'post', data)
             assert response.status_code == HTTPStatus.OK
             return response.json
 
@@ -85,7 +93,7 @@ class TestLoginUserView:
     def test_tokens_expired(self, client, user, credentials):
         @freeze_time('2021-06-30T10:30:20')
         def post_response(data) -> dict:
-            response = send_form_request(client, 'post', self.url, data)
+            response = self.send_form_request(client, 'post', data)
             assert response.status_code == HTTPStatus.OK
             return response.json
 
