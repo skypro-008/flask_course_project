@@ -29,7 +29,7 @@ jobs:
         flake8 --exclude venv --max-line-length=120
     - name: Test app and enerate Report
       run: |
-        coverage run -m unittest -vv
+        coverage run -m pytest -vv
         coverage report
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v1
