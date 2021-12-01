@@ -18,6 +18,7 @@ class ManageFavoriteView(Resource):
     @favorites_ns.response(int(HTTPStatus.NOT_FOUND), 'Movie not found')
     @login_required
     def post(self, user_id: int, movie_id: int):
+        """ Добавить фильм в избранное """
         FavoritesService(db.session).add(user_id, movie_id)
         return None, HTTPStatus.OK
 
@@ -25,6 +26,7 @@ class ManageFavoriteView(Resource):
     @favorites_ns.response(int(HTTPStatus.NOT_FOUND), 'Movie not found')
     @login_required
     def delete(self, user_id: int, movie_id: int):
+        """ Удалить фильм из избранного """
         return FavoritesService(db.session).delete(user_id, movie_id), HTTPStatus.NO_CONTENT
 
 
@@ -36,4 +38,5 @@ class FavoritesView(Resource):
     @favorites_ns.response(int(HTTPStatus.OK), 'OK')
     @login_required
     def get(self, user_id: int):
+        """ Получить список избранных фильмов """
         return FavoritesService(db.session).get_all(user_id, **pages_parser.parse_args()), HTTPStatus.OK

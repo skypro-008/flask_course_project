@@ -18,7 +18,7 @@ class UserProfileView(Resource):
     @user_ns.response(int(HTTPStatus.OK), 'OK')
     @login_required
     def get(self, user_id: int):
-        """ Get user profile. """
+        """ Получить профиль пользователя """
         return GetUserService(db.session).execute(user_id)
 
     @user_ns.expect(change_user_info_parser)
@@ -27,7 +27,7 @@ class UserProfileView(Resource):
     @user_ns.response(int(HTTPStatus.BAD_REQUEST), 'Validation error')
     @login_required
     def patch(self, user_id: int):
-        """ Update user info"""
+        """ Обновить профиль пользователя"""
         return UpdateProfileInfoService(db.session).execute(user_id, **change_user_info_parser.parse_args())
 
 
@@ -39,7 +39,7 @@ class ChangePasswordView(Resource):
     @user_ns.response(int(HTTPStatus.BAD_REQUEST), 'Password mismatch')
     @login_required
     def put(self, user_id: int):
-        """ Change user password """
+        """ Обновить пароль пользователя """
         ChangeUserPasswordService(db.session).execute(user_id=user_id, **change_password_parser.parse_args())
         return None, HTTPStatus.OK
 
