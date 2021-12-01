@@ -27,9 +27,9 @@ class UserDAO(BaseDAO):
             user.favorites.remove(movie)
             self._db_session.commit()
 
-    def get_favorites(self, user_id: int) -> List[Movie]:
+    def get_favorites(self, user_id: int, limit: int, offset: int) -> List[Movie]:
         user = self._db_session.query(User).filter(User.id == user_id).one()
-        return user.favorites
+        return user.favorites[offset:offset + limit]
 
     def update_user_info(self, user_id: int, **kwargs) -> User:
         self._db_session.query(User).filter(User.id == user_id).update(

@@ -6,7 +6,7 @@ from project.services.profile import ChangeUserPasswordService, FavoritesService
     UpdateProfileInfoService
 from project.tools.setup_db import db
 from project.utils.auth import login_required
-from project.views.dto import change_password_parser, change_user_info_parser
+from project.views.dto import change_password_parser, change_user_info_parser, pages_parser
 
 user_ns = Namespace('user', validate=True)
 
@@ -51,18 +51,20 @@ class ManageFavoriteView(Resource):
     @user_ns.response(int(HTTPStatus.OK), 'OK')
     @user_ns.response(int(HTTPStatus.NOT_FOUND), 'Movie not found')
     def post(self, user_id: int, movie_id: int):
-        return FavoritesService(db.session).add(user_id, movie_id), HTTPStatus.OK
+        FavoritesService(db.session).add(user_id, movie_id)
+        return None, HTTPStatus.OK
 
     @user_ns.response(int(HTTPStatus.NO_CONTENT), 'Deleted')
     @user_ns.response(int(HTTPStatus.NOT_FOUND), 'Movie not found')
     def delete(self, user_id: int, movie_id: int):
-        return FavoritesService(db.session).add(user_id, movie_id), HTTPStatus.NO_CONTENT
+        return FavoritesService(db.session).delete(user_id, movie_id), HTTPStatus.NO_CONTENT
 
 
 @user_ns.doc(security='Bearer')
 @user_ns.route('/<int:user_id>/favorites')
 class FavoritesView(Resource):
 
+    @user_ns.expect(pages_parser)
     @user_ns.response(int(HTTPStatus.OK), 'OK')
     def get(self, user_id: int):
-        return FavoritesService(db.session).get_all(user_id), HTTPStatus.OK
+        return FavoritesService(db.session).get_all(user_id, **pages_parser.parse_args()), HTTPStatus.OK

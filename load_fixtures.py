@@ -1,17 +1,14 @@
-import json
 import os
 
 from project.models import Director, Genre, Movie
 from project.server import create_app
 from project.tools.setup_db import db
+from project.utils.utils import read_json
 
 app = create_app(os.getenv('FLASK_ENV', 'development'))
 
-# Read fixtures
-with open('fixtures.json', encoding='utf-8') as f:
-    fixtures = json.load(f)
+fixtures = read_json('fixtures.json')
 
-# Load fixtures
 with app.app_context():
     for director in fixtures['directors']:
         db.session.add(Director(id=director['pk'], name=director['name']))

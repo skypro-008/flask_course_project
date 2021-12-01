@@ -4,6 +4,7 @@ from project.dao import MovieDAO, UserDAO
 from project.services import BaseService
 from project.tools.exceptions import MovieNotFound, UserNotFound
 from project.tools.schemas import MovieSchema
+from project.utils.utils import get_limit_and_offset
 
 
 class FavoritesService(BaseService):
@@ -12,7 +13,7 @@ class FavoritesService(BaseService):
         super().__init__(*args, **kwargs)
         self.user_dao = UserDAO(self._db_session)
         self.movie_dao = MovieDAO(self._db_session)
-        self.schema = MovieSchema(many=True, only=('id',))
+        self.schema = MovieSchema(many=True)
 
     def _check_exists(self, user_id: int, movie_id: int) -> None:
         if not self.user_dao.get_by_id(user_id):
@@ -29,8 +30,9 @@ class FavoritesService(BaseService):
         self._check_exists(user_id, movie_id)
         self.user_dao.remote_from_favorites(user_id, movie_id)
 
-    def get_all(self, user_id) -> List[Dict[str, Any]]:
+    def get_all(self, user_id: int, page: int) -> List[Dict[str, Any]]:
         if not self.user_dao.get_by_id(user_id):
             raise UserNotFound
 
-        return self.schema.dump(self.user_dao.get_favorites(user_id))
+        limit, offset = get_limit_and_offset(page)
+        return self.schema.dump(self.user_dao.get_favorites(user_id, limit, offset))
