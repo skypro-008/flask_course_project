@@ -10,11 +10,11 @@ class ChangeUserPasswordService(BaseService):
         super().__init__(*args, **kwargs)
         self.user_dao = UserDAO(self._db_session)
 
-    def execute(self, pk: int, password_1: str, password_2: str) -> None:
+    def execute(self, user_id: int, password_1: str, password_2: str) -> None:
         if password_1 != password_2:
             raise PasswordsMismatch
 
-        if user := self.user_dao.get_by_id(pk):
+        if user := self.user_dao.get_by_id(user_id):
             self.user_dao.update_user_password(
                 user_id=user.id,
                 password=generate_password_hash(password_1)

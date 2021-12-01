@@ -6,13 +6,13 @@ from project.tools.exceptions import PasswordsMismatch
 
 
 class TestUserProfileView:
-    url = '/user/{id}'
+    url = '/user/'
 
     def test_unauthorized(self, user, client):
-        assert client.get(self.url.format(id=user.id)).status_code == HTTPStatus.UNAUTHORIZED
+        assert client.get(self.url).status_code == HTTPStatus.UNAUTHORIZED
 
     def test_get_profile_success(self, user, client, login_headers):
-        response = client.get(self.url.format(id=user.id), headers=login_headers)
+        response = client.get(self.url, headers=login_headers)
         assert response.status_code == HTTPStatus.OK
         assert response.json == {
             "email": user.email,
@@ -30,22 +30,22 @@ class TestUserProfileView:
 
     ])
     def test_update_user_data(self, data, new_data, user, client, login_headers):
-        response = client.patch(self.url.format(id=user.id), json=data, headers=login_headers)
+        response = client.patch(self.url, json=data, headers=login_headers)
         assert response.status_code == HTTPStatus.OK
         assert response.json['name'] == (data['name'] if data['name'] else None)
         if new_data:
-            response = client.patch(self.url.format(id=user.id), json=new_data, headers=login_headers)
+            response = client.patch(self.url, json=new_data, headers=login_headers)
             assert response.json['name'] != data['name']
 
 
 class TestChangePasswordView:
-    url = '/user/{id}/setpassword'
+    url = '/user/password'
 
     def test_change_password(self, db, user, client, login_headers):
         old_password = user.password
         new_password = '123456'
 
-        response = client.put(self.url.format(id=user.id), headers=login_headers, json={
+        response = client.put(self.url, headers=login_headers, json={
             'password_1': new_password,
             'password_2': new_password
         })
@@ -56,7 +56,7 @@ class TestChangePasswordView:
         assert user.password != old_password
 
     def test_invalid_passwords(self, db, user, client, login_headers):
-        response = client.put(self.url.format(id=user.id), headers=login_headers, json={
+        response = client.put(self.url, headers=login_headers, json={
             'password_1': '123',
             'password_2': '321'
         })

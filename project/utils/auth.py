@@ -2,6 +2,7 @@ from functools import wraps
 
 import jwt
 from flask import abort, current_app, request
+from jwt import PyJWTError
 
 
 def login_required(func):
@@ -13,11 +14,9 @@ def login_required(func):
         access_token: str = authorization_header.split('Bearer ')[-1]
 
         try:
-            jwt.decode(access_token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-        except jwt.exceptions.PyJWTError as e:
-            print('JWT Decode Exception', e)
+            user_id = jwt.decode(access_token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['id']
+            return func(user_id=user_id, *args, **kwargs)
+        except (PyJWTError, KeyError):
             abort(401)
-
-        return func(*args, **kwargs)
 
     return wrapper

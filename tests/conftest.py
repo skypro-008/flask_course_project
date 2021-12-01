@@ -2,6 +2,7 @@ import pytest
 
 from project.dao import UserDAO
 from project.server import create_app
+from project.tools.schemas import UserSchema
 from project.tools.setup_db import db as database
 from project.utils.jwt_token import JwtToken
 from project.utils.security import generate_password_hash
@@ -42,5 +43,5 @@ def user(db):
 
 @pytest.fixture
 def login_headers(client, user):
-    access_token = JwtToken({}).access_token
-    return {'Authorization': f'Bearer {access_token}'}
+    tokens = JwtToken(UserSchema().dump(user))
+    return {'Authorization': f'Bearer {tokens.access_token}'}
