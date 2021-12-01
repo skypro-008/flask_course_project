@@ -1,6 +1,7 @@
 import logging
 
 from flask import Flask
+from flask_cors import CORS
 from flask_restx import Api
 
 from project.config import get_config
@@ -20,6 +21,7 @@ api = Api(
     description='Welcome to the Swagger UI documentation site!',
     doc='/ui'
 )
+cors = CORS()
 
 
 def create_app(config_name: str):
@@ -27,6 +29,7 @@ def create_app(config_name: str):
     app.config.from_object(get_config(config_name))
     app.logger.setLevel(logging.DEBUG if app.config['DEBUG'] else logging.INFO)
 
+    cors.init_app(app)
     db.init_app(app)
     api.init_app(app)
 
