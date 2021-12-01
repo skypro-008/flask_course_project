@@ -24,6 +24,7 @@ class DirectorSchema(BaseSchema):
 class MovieSchema(BaseSchema):
     title = Str(required=True)
     description = Str(required=True)
+    trailer = Str()
     year = Int(required=True, validate=Range(min=0, max=datetime.now().year))
     rating = Float(validate=Range(min=0, max=10))
     genre_id = Int(load_only=True, required=True)

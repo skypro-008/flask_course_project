@@ -21,6 +21,7 @@ class Movie(BaseMixin, db.Model):
 
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    trailer = db.Column(db.String(255), nullable=True)
     year = db.Column(db.Integer, nullable=False)
     rating = db.Column(db.Float, default=0.0)
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'), nullable=False)
