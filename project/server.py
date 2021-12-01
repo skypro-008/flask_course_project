@@ -6,7 +6,7 @@ from flask_restx import Api
 from project.config import get_config
 from project.tools.exceptions import BaseProjectException
 from project.tools.setup_db import db
-from project.views import auth_ns, user_ns
+from project.views import auth_ns, movies_ns, user_ns
 
 api = Api(
     authorizations={
@@ -32,6 +32,7 @@ def create_app(config_name: str):
 
     api.add_namespace(auth_ns)
     api.add_namespace(user_ns)
+    api.add_namespace(movies_ns)
 
     @api.errorhandler(BaseProjectException)
     def handle_validation_error(error):
