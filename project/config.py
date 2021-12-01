@@ -37,7 +37,7 @@ class ProductionConfig(BaseConfig):
     DEBUG = False
     TOKEN_EXPIRE_MINUTES = 15
     TOKEN_EXPIRE_DAYS = 130
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DB_URL')
 
 
 class Config(Enum):
