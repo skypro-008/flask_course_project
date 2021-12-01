@@ -12,6 +12,10 @@ class BaseProjectException(Exception):
         return {'message': cls._message}
 
 
+class ItemNotFoundException(BaseProjectException):
+    code = status.NOT_FOUND
+
+
 class UserAlreadyExists(BaseProjectException):
     _message = 'This email already taken'
     code = status.CONFLICT
@@ -22,9 +26,8 @@ class InvalidCredentials(BaseProjectException):
     code = status.UNAUTHORIZED
 
 
-class UserNotFound(BaseProjectException):
+class UserNotFoundException(ItemNotFoundException):
     _message = 'User not found'
-    code = status.NOT_FOUND
 
 
 class PasswordsMismatch(BaseProjectException):
@@ -32,11 +35,13 @@ class PasswordsMismatch(BaseProjectException):
     code = status.BAD_REQUEST
 
 
-class GenreNotFound(BaseProjectException):
+class GenreNotFoundException(ItemNotFoundException):
     _message = 'Genre not found'
-    code = status.NOT_FOUND
 
 
-class MovieNotFound(BaseProjectException):
+class MovieNotFoundException(ItemNotFoundException):
     _message = 'Movie not found'
-    code = status.NOT_FOUND
+
+
+class DirectorNotFoundException(ItemNotFoundException):
+    _message = 'Director not found'

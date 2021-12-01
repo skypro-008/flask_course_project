@@ -1,6 +1,6 @@
 from project.dao import UserDAO
 from project.services import BaseService
-from project.tools.exceptions import PasswordsMismatch, UserNotFound
+from project.tools.exceptions import PasswordsMismatch, UserNotFoundException
 from project.utils.security import generate_password_hash
 
 
@@ -20,4 +20,4 @@ class ChangeUserPasswordService(BaseService):
                 password=generate_password_hash(password_1)
             )
         else:
-            raise UserNotFound
+            raise UserNotFoundException

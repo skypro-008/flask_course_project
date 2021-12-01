@@ -2,7 +2,7 @@ from typing import Any, Dict, List
 
 from project.dao import MovieDAO, UserDAO
 from project.services import BaseService
-from project.tools.exceptions import MovieNotFound, UserNotFound
+from project.tools.exceptions import MovieNotFoundException, UserNotFoundException
 from project.tools.schemas import MovieSchema
 from project.utils.utils import get_limit_and_offset
 
@@ -17,10 +17,10 @@ class FavoritesService(BaseService):
 
     def _check_exists(self, user_id: int, movie_id: int) -> None:
         if not self.user_dao.get_by_id(user_id):
-            raise UserNotFound
+            raise UserNotFoundException
 
         if not self.movie_dao.get_by_id(movie_id):
-            raise MovieNotFound
+            raise MovieNotFoundException
 
     def add(self, user_id: int, movie_id: int) -> None:
         self._check_exists(user_id, movie_id)
@@ -32,7 +32,7 @@ class FavoritesService(BaseService):
 
     def get_all(self, user_id: int, page: int) -> List[Dict[str, Any]]:
         if not self.user_dao.get_by_id(user_id):
-            raise UserNotFound
+            raise UserNotFoundException
 
         limit, offset = get_limit_and_offset(page)
         return self.schema.dump(self.user_dao.get_favorites(user_id, limit, offset))

@@ -2,7 +2,7 @@ from typing import Any, Dict
 
 from project.dao import GenreDAO, UserDAO
 from project.services import BaseService
-from project.tools.exceptions import GenreNotFound, UserNotFound
+from project.tools.exceptions import GenreNotFoundException, UserNotFoundException
 from project.tools.schemas import UserSchema
 
 
@@ -17,7 +17,7 @@ class UpdateProfileInfoService(BaseService):
     def execute(self, pk: int, name: str = None, surname: str = None, favourite_genre: int = None) -> Dict[str, Any]:
         if favourite_genre:
             if not self.genre_dao.get_by_id(favourite_genre):
-                raise GenreNotFound
+                raise GenreNotFoundException
 
         if user := self.user_dao.get_by_id(pk):
             return self.schema.dump(self.user_dao.update_user_info(
@@ -27,4 +27,4 @@ class UpdateProfileInfoService(BaseService):
                 favourite_genre=favourite_genre
             ))
         else:
-            raise UserNotFound
+            raise UserNotFoundException

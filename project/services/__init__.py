@@ -1,5 +1,6 @@
-from .service import BaseService
+from .service import BaseService, ItemServiceBase
 
 __all__ = [
-    'BaseService'
+    'BaseService',
+    'ItemServiceBase'
 ]

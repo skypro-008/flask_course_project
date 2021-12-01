@@ -7,3 +7,4 @@ PyJWT~=2.3.0
 pytest
 freezegun
 flake8
+mypy

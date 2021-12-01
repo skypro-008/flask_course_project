@@ -16,7 +16,7 @@ class MoviesView(Resource):
     @movies_ns.response(int(HTTPStatus.OK), 'OK')
     def get(self):
         """ Get all movies """
-        return MoviesService(db.session).get_all_movies(**movie_state_parser.parse_args()), HTTPStatus.OK
+        return MoviesService(db.session).get_all(**movie_state_parser.parse_args()), HTTPStatus.OK
 
 
 @movies_ns.route('/<int:movie_id>')
@@ -26,4 +26,4 @@ class MovieView(Resource):
     @movies_ns.response(int(HTTPStatus.NOT_FOUND), 'Movie not found')
     def get(self, movie_id: int):
         """ Get movie by id """
-        return MoviesService(db.session).get_movie(movie_id), HTTPStatus.OK
+        return MoviesService(db.session).get_item(movie_id), HTTPStatus.OK
