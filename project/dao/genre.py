@@ -1,10 +1,6 @@
-from typing import Optional
-
-from project.models import Genre
 from project.dao import BaseDAO
+from project.models import Genre
 
 
 class GenreDAO(BaseDAO):
-
-    def get_genre_by_id(self, pk: int) -> Optional[Genre]:
-        return self._db_session.query(Genre).filter(Genre.id == pk).one_or_none()
+    __model__ = Genre

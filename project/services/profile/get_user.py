@@ -7,6 +7,6 @@ from project.services import BaseService
 class GetUserService(BaseService):
 
     def execute(self, pk: int) -> dict:
-        if user := UserDAO(self._db_session).get_user_by_id(pk):
+        if user := UserDAO(self._db_session).get_by_id(pk):
             return UserSchema().dump(user)
         raise UserNotFound

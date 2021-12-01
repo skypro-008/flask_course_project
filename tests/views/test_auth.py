@@ -50,7 +50,7 @@ class TestLoginUserView:
     def test_success_login(self, client, user, credentials):
         response = send_form_request(client, 'post', self.url, credentials)
         assert response.status_code == HTTPStatus.OK
-        assert {'access_token', 'refresh_token'} == response.json.keys()
+        assert {'access_token', 'refresh_token', 'user_id'} == response.json.keys()
 
     def test_user_not_found(self, client, credentials):
         response = send_form_request(client, 'post', self.url, credentials)

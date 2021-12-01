@@ -35,3 +35,8 @@ class PasswordsMismatch(BaseProjectException):
 class GenreNotFound(BaseProjectException):
     _message = 'Genre not found'
     code = status.NOT_FOUND
+
+
+class MovieNotFound(BaseProjectException):
+    _message = 'Movie not found'
+    code = status.NOT_FOUND
