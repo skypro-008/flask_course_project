@@ -18,7 +18,7 @@ class ItemServiceBase(BaseService):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.dao: BaseDAO = NotImplemented
-        self.schema: Schema = BaseSchema
+        self.schema: Type[Schema] = BaseSchema
         self.not_found_exception: Type[ItemNotFoundException] = ItemNotFoundException
 
     def get_item(self, pk: int) -> dict:
