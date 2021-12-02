@@ -1,7 +1,7 @@
 import pytest
 
 from project.dao import UserDAO
-from project.models import Director, Genre
+from project.models import Director, Genre, Movie
 from project.server import create_app
 from project.tools.schemas import UserSchema
 from project.tools.setup_db import db as database
@@ -62,3 +62,21 @@ def director(db):
     db.session.add(obj)
     db.session.commit()
     return obj
+
+
+@pytest.fixture
+def movies(db, genre, director):
+    movies_list = []
+    for i in range(10):
+        obj = Movie(
+            title=f'title_{i}',
+            description=f'description_{i}',
+            year=2000 + i,
+            genre_id=genre.id,
+            director_id=director.id
+        )
+        db.session.add(obj)
+        db.session.flush()
+        movies_list.append(obj)
+    db.session.commit()
+    return movies_list

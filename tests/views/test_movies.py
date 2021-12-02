@@ -2,27 +2,8 @@ from http import HTTPStatus
 
 import pytest
 
-from project.models import Director, Genre, Movie
-
 
 class TestMoviesView:
-
-    @pytest.fixture
-    def movies(self, db, genre, director):
-        movies_list = []
-        for i in range(10):
-            obj = Movie(
-                title=f'title_{i}',
-                description=f'description_{i}',
-                year=2000 + i,
-                genre_id=genre.id,
-                director_id=director.id
-            )
-            db.session.add(obj)
-            db.session.flush()
-            movies_list.append(obj)
-        db.session.commit()
-        return movies_list
 
     def test_invalid_state(self, client):
         response = client.get('/movies/?state=old')
