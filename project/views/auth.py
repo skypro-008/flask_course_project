@@ -10,7 +10,7 @@ from project.views.dto import auth_parser
 
 auth_ns = Namespace('auth', validate=True)
 
-tokens = auth_ns.model('Access and Refresh tokens', {
+tokens = auth_ns.model('Access и Refresh токены', {
     'access_token': fields.String(required=True),
     'refresh_token': fields.String(required=True)
 })
@@ -32,11 +32,11 @@ class RegisterUserView(Resource):
 @auth_ns.route('/login')
 class LoginUserView(Resource):
     @auth_ns.expect(auth_parser)
-    @auth_ns.response(int(HTTPStatus.OK), 'OK')
+    @auth_ns.response(int(HTTPStatus.OK), 'OK', tokens)
     @auth_ns.response(int(HTTPStatus.UNAUTHORIZED), 'Invalid credentials')
     @auth_ns.response(int(HTTPStatus.BAD_REQUEST), 'Validation error')
     def post(self):
-        """ Authenticate user and send access, refresh tokens and user_id"""
+        """ Authenticate user and send access and refresh tokens"""
         return CheckUserCredentialsService(db.session).execute(**auth_parser.parse_args()), HTTPStatus.OK
 
     @auth_ns.expect(tokens)

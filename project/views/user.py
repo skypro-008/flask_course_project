@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from flask_restx import Namespace, Resource
+from flask_restx import fields, Namespace, Resource
 
 from project.services.profile import ChangeUserPasswordService, GetUserService, \
     UpdateProfileInfoService
@@ -10,21 +10,31 @@ from project.views.dto import change_password_parser, change_user_info_parser
 
 user_ns = Namespace('user', validate=True)
 
+user_profile = user_ns.model('Профиль пользователя', {
+    'id': fields.Integer(required=True),
+    'email': fields.String(required=True),
+    'name': fields.String,
+    'surname': fields.String,
+    'favourite_genre': fields.Integer,
+})
+
 
 @user_ns.doc(security='Bearer')
 @user_ns.route('/')
 class UserProfileView(Resource):
 
-    @user_ns.response(int(HTTPStatus.OK), 'OK')
+    @user_ns.response(int(HTTPStatus.OK), 'OK', user_profile)
+    @user_ns.marshal_with(user_profile)
     @login_required
     def get(self, user_id: int):
         """ Получить профиль пользователя """
         return GetUserService(db.session).execute(user_id)
 
     @user_ns.expect(change_user_info_parser)
-    @user_ns.response(int(HTTPStatus.OK), 'OK')
+    @user_ns.response(int(HTTPStatus.OK), 'OK', user_profile)
     @user_ns.response(int(HTTPStatus.NOT_FOUND), 'Genre not found')
     @user_ns.response(int(HTTPStatus.BAD_REQUEST), 'Validation error')
+    @user_ns.marshal_with(user_profile)
     @login_required
     def patch(self, user_id: int):
         """ Обновить профиль пользователя"""

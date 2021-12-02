@@ -18,8 +18,8 @@ def test_development():
     app_config = create_app('development').config
     assert app_config['TESTING'] is False
     assert app_config['DEBUG'] is True
-    assert app_config['TOKEN_EXPIRE_MINUTES'] == 1
-    assert app_config['TOKEN_EXPIRE_DAYS'] == 5
+    assert app_config['TOKEN_EXPIRE_MINUTES'] == 5
+    assert app_config['TOKEN_EXPIRE_DAYS'] == 50
     assert app_config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///' + os.path.join(BASEDIR, 'app.db')
     assert app_config['SQLALCHEMY_TRACK_MODIFICATIONS'] is False
     assert app_config['SQLALCHEMY_ECHO'] is True

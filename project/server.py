@@ -22,7 +22,7 @@ api = Api(
     doc='/ui',
     contact_email='painassasin@icloud.com',
     contact_url='https://github.com/painassasin',
-    version='1.3',
+    version='1.3.1',
 
 )
 cors = CORS()

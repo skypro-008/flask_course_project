@@ -18,6 +18,10 @@ class BaseConfig:
     PWD_HASH_ITERATIONS: int = 100_000
 
     RESTX_VALIDATE = True
+    RESTX_MASK_SWAGGER = False
+    RESTX_JSON = {
+        "ensure_ascii": False,
+    }
 
 
 class TestingConfig(BaseConfig):
@@ -27,8 +31,8 @@ class TestingConfig(BaseConfig):
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
-    TOKEN_EXPIRE_MINUTES = 1
-    TOKEN_EXPIRE_DAYS = 5
+    TOKEN_EXPIRE_MINUTES = 5
+    TOKEN_EXPIRE_DAYS = 50
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'app.db')
 

@@ -16,7 +16,6 @@ class TestUserProfileView:
         assert response.status_code == HTTPStatus.OK
         assert response.json == {
             "email": user.email,
-            "favorites": {},
             "favourite_genre": None,
             "id": user.id,
             "name": None,

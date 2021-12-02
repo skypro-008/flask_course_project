@@ -27,10 +27,10 @@ class TestMoviesView:
 
     def test_no_pages(self, app, client, movies):
         app.config['ITEMS_PER_PAGE'] = 3
-        response_1 = client.get(f'/movies/')
+        response_1 = client.get('/movies/')
         assert response_1.status_code == HTTPStatus.OK
         assert len(response_1.json) == len(movies)
 
-        response_2 = client.get(f'/movies/?state=new')
+        response_2 = client.get('/movies/?state=new')
         assert response_2.status_code == HTTPStatus.OK
         assert len(response_2.json) == len(movies)
