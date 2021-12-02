@@ -14,7 +14,11 @@ class BaseDAO:
         self._db_session = session
 
     def get_by_id(self, pk: int) -> Optional[Union[Model, BaseMixin]]:
-        return self._db_session.query(self.__model__).filter(self.__model__.id == pk).one_or_none()
+        return (
+            self._db_session.query(self.__model__)
+            .filter(self.__model__.id == pk)
+            .one_or_none()
+        )
 
     def get_all(self, page: Optional[int] = None, **kwargs) -> List[Model]:
         stmt = self._db_session.query(self.__model__)

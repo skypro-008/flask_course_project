@@ -10,7 +10,9 @@ from project.utils.utils import get_limit_and_offset
 class MovieDAO(BaseDAO):
     __model__ = Movie
 
-    def get_all(self, page: Optional[int] = None, new: bool = False, **kwargs) -> List[Movie]:
+    def get_all(
+        self, page: Optional[int] = None, new: bool = False, **kwargs
+    ) -> List[Movie]:
         stmt = self._db_session.query(Movie)
         if new:
             stmt = stmt.order_by(desc(Movie.year))

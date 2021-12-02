@@ -3,15 +3,15 @@ import pytest
 from project.dao import UserDAO
 from project.models import Director, Genre, Movie
 from project.server import create_app
-from project.tools.schemas import UserSchema
-from project.tools.setup_db import db as database
+from project.services.schemas import UserSchema
+from project.setup_db import db as database
 from project.utils.jwt_token import JwtToken
 from project.utils.security import generate_password_hash
 
 
 @pytest.fixture
 def app():
-    app = create_app('testing')
+    app = create_app("testing")
     with app.app_context():
         yield app
 
@@ -37,20 +37,19 @@ def client(app, db):
 @pytest.fixture
 def user(db):
     return UserDAO(db.session).create(
-        email='test@test.com',
-        password=generate_password_hash('test123')
+        email="test@test.com", password=generate_password_hash("test123")
     )
 
 
 @pytest.fixture
 def login_headers(client, user):
     tokens = JwtToken(UserSchema().dump(user))
-    return {'Authorization': f'Bearer {tokens.access_token}'}
+    return {"Authorization": f"Bearer {tokens.access_token}"}
 
 
 @pytest.fixture
 def genre(db):
-    obj = Genre(name='genre')
+    obj = Genre(name="genre")
     db.session.add(obj)
     db.session.commit()
     return obj
@@ -58,7 +57,7 @@ def genre(db):
 
 @pytest.fixture
 def director(db):
-    obj = Director(name='director')
+    obj = Director(name="director")
     db.session.add(obj)
     db.session.commit()
     return obj
@@ -69,11 +68,11 @@ def movies(db, genre, director):
     movies_list = []
     for i in range(10):
         obj = Movie(
-            title=f'title_{i}',
-            description=f'description_{i}',
+            title=f"title_{i}",
+            description=f"description_{i}",
             year=2000 + i,
             genre_id=genre.id,
-            director_id=director.id
+            director_id=director.id,
         )
         db.session.add(obj)
         db.session.flush()

@@ -4,8 +4,8 @@ from marshmallow import Schema
 from sqlalchemy.orm.scoping import scoped_session
 
 from project.dao import BaseDAO
-from project.tools.exceptions import ItemNotFoundException
-from project.tools.schemas import BaseSchema
+from project.exceptions import ItemNotFoundException
+from project.services.schemas import BaseSchema
 
 
 class BaseService:
@@ -26,6 +26,4 @@ class ItemServiceBase(BaseService):
         return self.schema().dump(self.dao.get_by_id(pk))
 
     def get_all(self, **kwargs) -> List[dict]:
-        return self.schema(many=True).dump(self.dao.get_all(
-            page=kwargs.get('page')
-        ))
+        return self.schema(many=True).dump(self.dao.get_all(page=kwargs.get("page")))

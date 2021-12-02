@@ -1,11 +1,10 @@
 from project.dao import GenreDAO
 from project.services import ItemServiceBase
-from project.tools.exceptions import GenreNotFoundException
-from project.tools.schemas import GenreSchema
+from project.exceptions import GenreNotFoundException
+from project.services.schemas import GenreSchema
 
 
 class GenresService(ItemServiceBase):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.dao = GenreDAO(self._db_session)

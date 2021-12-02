@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from project.tools.setup_db import db
+from project.setup_db import db
 
 
 class BaseMixin(object):

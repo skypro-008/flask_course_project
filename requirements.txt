@@ -11,3 +11,4 @@ pytest-cov
 freezegun
 flake8
 mypy
+black

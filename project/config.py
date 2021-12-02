@@ -6,7 +6,7 @@ BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class BaseConfig:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'you-will-never-guess')
+    SECRET_KEY = os.getenv("SECRET_KEY", "you-will-never-guess")
     ITEMS_PER_PAGE: int = 12
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TOKEN_EXPIRE_MINUTES = 15
@@ -14,7 +14,7 @@ class BaseConfig:
 
     BUNDLE_ERRORS = True
 
-    PWD_HASH_SALT: bytes = base64.b64decode(os.getenv('HASH_SALT', 'salt'))
+    PWD_HASH_SALT: bytes = base64.b64decode(os.getenv("HASH_SALT", "salt"))
     PWD_HASH_ITERATIONS: int = 100_000
 
     RESTX_VALIDATE = True
@@ -26,7 +26,7 @@ class BaseConfig:
 
 class TestingConfig(BaseConfig):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 
 
 class DevelopmentConfig(BaseConfig):
@@ -34,14 +34,14 @@ class DevelopmentConfig(BaseConfig):
     TOKEN_EXPIRE_MINUTES = 5
     TOKEN_EXPIRE_DAYS = 50
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'app.db')
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASEDIR, "app.db")
 
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
     TOKEN_EXPIRE_MINUTES = 15
     TOKEN_EXPIRE_DAYS = 130
-    SQLALCHEMY_DATABASE_URI = os.getenv('DB_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv("DB_URL")
 
 
 class Config(Enum):

@@ -5,8 +5,9 @@ from sqlalchemy.exc import IntegrityError
 
 from project.dao import BaseDAO
 from project.models import Movie, User
-from project.tools.exceptions import UserAlreadyExists
-from project.tools.schemas import UserSchema
+from project.exceptions import UserAlreadyExists
+from project.services.schemas import UserSchema
+from project.utils.utils import get_limit_and_offset
 
 
 class UserDAO(BaseDAO):
@@ -27,27 +28,32 @@ class UserDAO(BaseDAO):
             user.favorites.remove(movie)
             self._db_session.commit()
 
-    def get_favorites(self, user_id: int, limit: int, offset: int) -> List[Movie]:
+    def get_favorites(self, user_id: int, page: Optional[int] = None) -> List[Movie]:
         user = self._db_session.query(User).filter(User.id == user_id).one()
-        return user.favorites[offset:offset + limit]
+        if page:
+            limit, offset = get_limit_and_offset(page)
+            return user.favorites[offset: offset + limit]
+        return user.favorites
 
     def update_user_info(self, user_id: int, **kwargs) -> User:
         self._db_session.query(User).filter(User.id == user_id).update(
-            UserSchema().load(kwargs, partial=('email', 'password'))
+            UserSchema().load(kwargs, partial=("email", "password"))
         )
         self._db_session.commit()
 
         return User.query.get(user_id)
 
     def update_user_password(self, user_id: int, password: str) -> None:
-        self._db_session.query(User).filter(User.id == user_id).update({'password': password})
+        self._db_session.query(User).filter(User.id == user_id).update(
+            {"password": password}
+        )
         self._db_session.commit()
 
     def get_user_by_email(self, email: str) -> Optional[User]:
         return self._db_session.query(User).filter(User.email == email).one_or_none()
 
     def create(self, email: str, password: str) -> User:
-        obj = User(**UserSchema().load({'email': email, 'password': password}))
+        obj = User(email=email, password=password)
         try:
             self._db_session.add(obj)
             self._db_session.commit()
