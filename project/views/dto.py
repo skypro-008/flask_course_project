@@ -15,7 +15,7 @@ change_user_info_parser.add_argument(name='surname', type=str, required=False)
 change_user_info_parser.add_argument(name='favourite_genre', type=int, required=False)
 
 pages_parser = RequestParser()
-pages_parser.add_argument(name='page', type=int, location='args', required=False, nullable=False)
+pages_parser.add_argument(name='page', type=int, location='args', required=False)
 
 movie_state_parser = pages_parser.copy()
 movie_state_parser.add_argument('state', choices=('new',), required=False, help='Only have to be \'new\'')

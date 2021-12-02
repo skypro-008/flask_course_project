@@ -4,7 +4,6 @@ from project.dao import MovieDAO
 from project.services import ItemServiceBase
 from project.tools.exceptions import MovieNotFoundException
 from project.tools.schemas import MovieSchema
-from project.utils.utils import get_limit_and_offset
 
 
 class MoviesService(ItemServiceBase):
@@ -15,6 +14,8 @@ class MoviesService(ItemServiceBase):
         self.schema = MovieSchema
         self.not_found_exception = MovieNotFoundException
 
-    def get_all(self, page: int = 1, state: str = None, **kwargs) -> List[dict]:
-        limit, offset = get_limit_and_offset(page)
-        return self.schema(many=True).dump(self.dao.get_all(limit, offset, new=(state == 'new')))
+    def get_all(self, **kwargs) -> List[dict]:
+        return self.schema(many=True).dump(self.dao.get_all(
+            page=kwargs.get('page'),
+            new=(kwargs.get('state') == 'new')
+        ))

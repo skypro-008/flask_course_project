@@ -1,6 +1,7 @@
 import pytest
 
 from project.dao import UserDAO
+from project.models import Director, Genre
 from project.server import create_app
 from project.tools.schemas import UserSchema
 from project.tools.setup_db import db as database
@@ -45,3 +46,19 @@ def user(db):
 def login_headers(client, user):
     tokens = JwtToken(UserSchema().dump(user))
     return {'Authorization': f'Bearer {tokens.access_token}'}
+
+
+@pytest.fixture
+def genre(db):
+    obj = Genre(name='genre')
+    db.session.add(obj)
+    db.session.commit()
+    return obj
+
+
+@pytest.fixture
+def director(db):
+    obj = Director(name='director')
+    db.session.add(obj)
+    db.session.commit()
+    return obj

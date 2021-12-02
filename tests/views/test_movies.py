@@ -8,20 +8,6 @@ from project.models import Director, Genre, Movie
 class TestMoviesView:
 
     @pytest.fixture
-    def genre(self, db):
-        obj = Genre(name='genre')
-        db.session.add(obj)
-        db.session.commit()
-        return obj
-
-    @pytest.fixture
-    def director(self, db):
-        obj = Director(name='director')
-        db.session.add(obj)
-        db.session.commit()
-        return obj
-
-    @pytest.fixture
     def movies(self, db, genre, director):
         movies_list = []
         for i in range(10):
@@ -57,3 +43,13 @@ class TestMoviesView:
         response_1 = client.get('/movies/?state=new')
         response_2 = client.get('/movies/')
         assert response_1.json[0]['year'] > response_2.json[0]['year']
+
+    def test_no_pages(self, app, client, movies):
+        app.config['ITEMS_PER_PAGE'] = 3
+        response_1 = client.get(f'/movies/')
+        assert response_1.status_code == HTTPStatus.OK
+        assert len(response_1.json) == len(movies)
+
+        response_2 = client.get(f'/movies/?state=new')
+        assert response_2.status_code == HTTPStatus.OK
+        assert len(response_2.json) == len(movies)

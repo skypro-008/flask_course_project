@@ -6,7 +6,6 @@ from sqlalchemy.orm.scoping import scoped_session
 from project.dao import BaseDAO
 from project.tools.exceptions import ItemNotFoundException
 from project.tools.schemas import BaseSchema
-from project.utils.utils import get_limit_and_offset
 
 
 class BaseService:
@@ -26,6 +25,7 @@ class ItemServiceBase(BaseService):
             raise self.not_found_exception
         return self.schema().dump(self.dao.get_by_id(pk))
 
-    def get_all(self, page: int = 1, **kwargs) -> List[dict]:
-        limit, offset = get_limit_and_offset(page)
-        return self.schema(many=True).dump(self.dao.get_all(limit, offset))
+    def get_all(self, **kwargs) -> List[dict]:
+        return self.schema(many=True).dump(self.dao.get_all(
+            page=kwargs.get('page')
+        ))
