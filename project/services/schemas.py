@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from marshmallow import pre_load, Schema
+from marshmallow import Schema, pre_load
 from marshmallow.fields import Email, Float, Int, List, Nested, Str
 from marshmallow.validate import Range
 
@@ -39,4 +39,4 @@ class UserSchema(BaseSchema):
     name = Str()
     surname = Str()
     favourite_genre = Int()
-    favorites = List(Nested(MovieSchema(only=("id",)), dump_only=True))
+    favorites = List(Nested(MovieSchema(only=('id',)), dump_only=True))

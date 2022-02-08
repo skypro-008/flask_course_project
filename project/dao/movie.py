@@ -10,6 +10,9 @@ from project.utils.utils import get_limit_and_offset
 class MovieDAO(BaseDAO):
     __model__ = Movie
 
+    def get_by_id(self, pk: int) -> Optional[Movie]:
+        return super().get_by_id(pk)
+
     def get_all(
         self, page: Optional[int] = None, new: bool = False, **kwargs
     ) -> List[Movie]:

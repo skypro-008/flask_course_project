@@ -26,4 +26,4 @@ class ItemServiceBase(BaseService):
         return self.schema().dump(self.dao.get_by_id(pk))
 
     def get_all(self, **kwargs) -> List[dict]:
-        return self.schema(many=True).dump(self.dao.get_all(page=kwargs.get("page")))
+        return self.schema(many=True).dump(self.dao.get_all(page=kwargs.get('page')))

@@ -5,9 +5,9 @@ from .movie import MovieDAO
 from .user import UserDAO
 
 __all__ = [
-    "BaseDAO",
-    "Director",
-    "GenreDAO",
-    "MovieDAO",
-    "UserDAO",
+    'BaseDAO',
+    'Director',
+    'GenreDAO',
+    'MovieDAO',
+    'UserDAO',
 ]

@@ -1,8 +1,10 @@
+import os
 from http import HTTPStatus
 
 import pytest
 
-from project.exceptions import PasswordsMismatch
+from project.exceptions import UpdatePasswordException
+from project.utils.security import generate_password_hash
 
 
 class TestUserProfileView:
@@ -43,25 +45,28 @@ class TestChangePasswordView:
     url = "/user/password"
 
     def test_change_password(self, db, user, client, login_headers):
-        old_password = user.password
-        new_password = "123456"
+        old_password = os.urandom(10).hex()
+        db.session.refresh(user)
+        user.password = generate_password_hash(old_password)
+
+        new_password = os.urandom(10).hex()
 
         response = client.put(
             self.url,
             headers=login_headers,
-            json={"password_1": new_password, "password_2": new_password},
+            json={"old_password": old_password, "new_password": new_password},
         )
         assert response.status_code == HTTPStatus.OK
         assert not response.json
 
         db.session.refresh(user)
-        assert user.password != old_password
+        assert user.password == generate_password_hash(new_password)
 
     def test_invalid_passwords(self, db, user, client, login_headers):
         response = client.put(
             self.url,
             headers=login_headers,
-            json={"password_1": "123", "password_2": "321"},
+            json={"old_password": "123", "new_password": "321"},
         )
         assert response.status_code == HTTPStatus.BAD_REQUEST
-        assert response.json == PasswordsMismatch.message
+        assert response.json == UpdatePasswordException.message

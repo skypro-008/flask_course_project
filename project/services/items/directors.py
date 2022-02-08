@@ -1,6 +1,6 @@
 from project.dao.director import DirectorDAO
-from project.services import ItemServiceBase
 from project.exceptions import DirectorNotFoundException
+from project.services import ItemServiceBase
 from project.services.schemas import DirectorSchema
 
 

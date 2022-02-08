@@ -19,4 +19,4 @@ class PageValidator(BaseSchema):
 
 
 class MovieStateValidator(PageValidator):
-    state = Str(validate=OneOf(["new"]), required=False)
+    state = Str(validate=OneOf(['new']), required=False)

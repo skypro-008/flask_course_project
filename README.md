@@ -1,5 +1,4 @@
 # Курсовой проект для студентов skypro по теме Flask
-[![codecov](https://codecov.io/gh/painassasin/flask_course_project/branch/main/graph/badge.svg?token=BVO9eIQoxo)](https://codecov.io/gh/painassasin/flask_course_project)
 
 ## Проверяемые навыки
 - создание ORM через sqlalchemy

@@ -1,8 +1,8 @@
 from typing import List
 
 from project.dao import MovieDAO
-from project.services import ItemServiceBase
 from project.exceptions import MovieNotFoundException
+from project.services import ItemServiceBase
 from project.services.schemas import MovieSchema
 
 
@@ -16,6 +16,6 @@ class MoviesService(ItemServiceBase):
     def get_all(self, **kwargs) -> List[dict]:
         return self.schema(many=True).dump(
             self.dao.get_all(
-                page=kwargs.get("page"), new=(kwargs.get("state") == "new")
+                page=kwargs.get('page'), new=(kwargs.get('state') == 'new')
             )
         )

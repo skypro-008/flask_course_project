@@ -4,14 +4,20 @@ from typing import List, Optional
 from sqlalchemy.exc import IntegrityError
 
 from project.dao import BaseDAO
-from project.models import Movie, User
 from project.exceptions import UserAlreadyExists
+from project.models import Movie, User
 from project.services.schemas import UserSchema
 from project.utils.utils import get_limit_and_offset
 
 
 class UserDAO(BaseDAO):
     __model__ = User
+
+    def get_by_id(self, pk: int) -> Optional[User]:
+        return super().get_by_id(pk)
+
+    def get_all(self, page: Optional[int] = None, **kwargs) -> List[User]:
+        return super().get_all(page=page, **kwargs)
 
     def add_movie_to_favorites(self, user_id: int, movie_id: int):
         user = User.query.get(user_id)
@@ -37,7 +43,7 @@ class UserDAO(BaseDAO):
 
     def update_user_info(self, user_id: int, **kwargs) -> User:
         self._db_session.query(User).filter(User.id == user_id).update(
-            UserSchema().load(kwargs, partial=("email", "password"))
+            UserSchema().load(kwargs, partial=('email', 'password'))
         )
         self._db_session.commit()
 
@@ -45,7 +51,7 @@ class UserDAO(BaseDAO):
 
     def update_user_password(self, user_id: int, password: str) -> None:
         self._db_session.query(User).filter(User.id == user_id).update(
-            {"password": password}
+            {'password': password}
         )
         self._db_session.commit()
 

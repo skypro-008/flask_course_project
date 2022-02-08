@@ -2,8 +2,8 @@ from typing import Dict
 
 from jwt import PyJWTError
 
-from project.services import BaseService
 from project.exceptions import InvalidOrExpiredRefreshToken
+from project.services import BaseService
 from project.utils.jwt_token import JwtToken
 
 

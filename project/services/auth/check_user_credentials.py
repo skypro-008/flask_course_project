@@ -1,8 +1,8 @@
 from typing import Dict
 
 from project.dao import UserDAO
-from project.services import BaseService
 from project.exceptions import InvalidCredentials
+from project.services import BaseService
 from project.services.schemas import UserSchema
 from project.utils.jwt_token import JwtToken
 from project.utils.security import compare_passwords
