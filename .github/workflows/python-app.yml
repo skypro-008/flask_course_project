@@ -29,5 +29,4 @@ jobs:
         mypy .
     - name: Test app
       run: |
-        pip install pytest
         pytest . -vv
