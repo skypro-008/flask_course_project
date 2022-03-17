@@ -1,5 +1,4 @@
-from project.models import BaseMixin
-from project.setup_db import db
+from project.setup_db import Base, db
 
 favorite = db.Table(
     'favorites',
@@ -8,7 +7,7 @@ favorite = db.Table(
 )
 
 
-class User(BaseMixin, db.Model):
+class User(Base):
     __tablename__ = 'users'
 
     email = db.Column(db.String(100), unique=True, nullable=False)

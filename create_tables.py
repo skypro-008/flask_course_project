@@ -1,6 +1,5 @@
 import os
 
-from project.models import User, Director, Genre, Movie  # noqa F401
 from project.server import create_app
 from project.setup_db import db
 

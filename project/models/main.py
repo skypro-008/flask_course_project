@@ -1,22 +1,21 @@
-from project.models.base import BaseMixin
-from project.setup_db import db
+from project.setup_db import Base, db
 
 
-class Director(BaseMixin, db.Model):
+class Director(Base):
     __tablename__ = 'directors'
 
     name = db.Column(db.String(100), unique=True, nullable=False)
     movies = db.relationship('Movie', back_populates='director', cascade='delete')
 
 
-class Genre(BaseMixin, db.Model):
+class Genre(Base):
     __tablename__ = 'genres'
 
     name = db.Column(db.String(100), unique=True, nullable=False)
     movies = db.relationship('Movie', back_populates='genre', cascade='delete')
 
 
-class Movie(BaseMixin, db.Model):
+class Movie(Base):
     __tablename__ = 'movies'
 
     title = db.Column(db.String(255), nullable=False)

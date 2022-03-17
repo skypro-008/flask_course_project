@@ -3,23 +3,24 @@ from typing import List, Optional
 
 from sqlalchemy.exc import IntegrityError
 
-from project.dao import BaseDAO
-from project.exceptions import UserAlreadyExists
+from project.dao.base import BaseDAO
+from project.errors import ConflictError
 from project.models import Movie, User
 from project.services.schemas import UserSchema
-from project.utils.utils import get_limit_and_offset
 
 
 class UserDAO(BaseDAO):
+    # TODO: Стремная какая-то херня, надо поправить бы юзера
     __model__ = User
 
     def get_by_id(self, pk: int) -> Optional[User]:
         return super().get_by_id(pk)
 
-    def get_all(self, page: Optional[int] = None, **kwargs) -> List[User]:
-        return super().get_all(page=page, **kwargs)
+    def get_all(self, page: Optional[int] = None) -> List[User]:
+        return super().get_all(page=page)
 
     def add_movie_to_favorites(self, user_id: int, movie_id: int):
+        # TODO: Чет херня какая-то
         user = User.query.get(user_id)
         movie = Movie.query.get(movie_id)
 
@@ -27,6 +28,7 @@ class UserDAO(BaseDAO):
         self._db_session.commit()
 
     def remote_from_favorites(self, user_id: int, movie_id: int):
+        # TODO: Чет херня какая-то
         user = User.query.get(user_id)
         movie = Movie.query.get(movie_id)
 
@@ -35,9 +37,11 @@ class UserDAO(BaseDAO):
             self._db_session.commit()
 
     def get_favorites(self, user_id: int, page: Optional[int] = None) -> List[Movie]:
-        user = self._db_session.query(User).filter(User.id == user_id).one()
+        if not (user := self._db_session.query(User).filter(User.id == user_id).one_or_none()):
+            return []
+
         if page:
-            limit, offset = get_limit_and_offset(page)
+            limit, offset = self._get_limit_and_offset(page)
             return user.favorites[offset: offset + limit]
         return user.favorites
 
@@ -50,9 +54,9 @@ class UserDAO(BaseDAO):
         return User.query.get(user_id)
 
     def update_user_password(self, user_id: int, password: str) -> None:
-        self._db_session.query(User).filter(User.id == user_id).update(
-            {'password': password}
-        )
+        self._db_session.query(User).filter(User.id == user_id).update({
+            'password': password
+        })
         self._db_session.commit()
 
     def get_user_by_email(self, email: str) -> Optional[User]:
@@ -64,5 +68,5 @@ class UserDAO(BaseDAO):
             self._db_session.add(obj)
             self._db_session.commit()
         except IntegrityError:
-            raise UserAlreadyExists
+            raise ConflictError('User with this email already exists. Choose the diffrent email address.')
         return obj

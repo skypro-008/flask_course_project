@@ -1,9 +1,7 @@
-from .base import BaseMixin
-from .movie import Director, Genre, Movie
-from .user import User
+from .auth import User
+from .main import Director, Genre, Movie
 
 __all__ = [
-    'BaseMixin',
     'Director',
     'Genre',
     'Movie',
