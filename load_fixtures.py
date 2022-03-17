@@ -7,8 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from project.models import Director, Genre, Movie
 from project.server import create_app
-from project.setup import db
-from project.setup.db.models import Base
+from project.setup.db import db, models
 
 app = create_app(os.getenv("FLASK_ENV", "development"))
 
@@ -18,7 +17,7 @@ def read_json(filename: str, encoding: str = 'utf-8'):
         return json.load(f)
 
 
-def load_data(data: List[Dict[str, Any]], model: Type[Base]) -> None:
+def load_data(data: List[Dict[str, Any]], model: Type[models.Base]) -> None:
     for item in data:
         item['id'] = item.pop('pk')
         db.session.add(model(**item))

@@ -5,7 +5,7 @@
 # from project.services.profile import FavoritesService
 # from project.setup_db import db
 # from project.utils.auth_decorator import login_required
-# from project.views.dto import pages_parser
+# from project.views.dto import page_parser
 # from project.views.validators import PageValidator
 #
 # favorites_ns = Namespace('favorites', validate=True)
@@ -36,7 +36,7 @@
 # @favorites_ns.doc(security='Bearer')
 # @favorites_ns.route('/movies/')
 # class FavoritesView(Resource):
-#     @favorites_ns.expect(pages_parser)
+#     @favorites_ns.expect(page_parser)
 #     @favorites_ns.response(int(HTTPStatus.OK), 'OK')
 #     @login_required
 #     def get(self, user_id: int):
@@ -44,7 +44,7 @@
 #         return (
 #             FavoritesService(db.session).get_all(
 #                 user_id=user_id,
-#                 page=PageValidator().load(pages_parser.parse_args()).get('page'),
+#                 page=PageValidator().load(page_parser.parse_args()).get('page'),
 #             ),
 #             HTTPStatus.OK,
 #         )

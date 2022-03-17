@@ -1,32 +1,29 @@
-from abc import ABC, abstractmethod
-from typing import Optional, Tuple
+from typing import Generic, List, Optional, TypeVar
 
 from flask import current_app
+from flask_sqlalchemy import BaseQuery
+from sqlalchemy.orm import scoped_session
 
 from project.setup.db.models import Base
 
+T = TypeVar('T', bound=Base)
 
-class BaseDAO(ABC):
-    # TODO: Указать возвращаемые типы
+
+class BaseDAO(Generic[T]):
     __model__ = Base
 
-    def __init__(self, db_session):
+    def __init__(self, db_session: scoped_session) -> None:
         self._db_session = db_session
 
-    @abstractmethod
-    def get_by_id(self, pk: int):
-        return self._db_session.query(self.__model__).filter(self.__model__.id == pk).one_or_none()
+    @property
+    def _items_per_page(self) -> int:
+        return current_app.config['ITEMS_PER_PAGE']
 
-    @abstractmethod
-    def get_all(self, page: Optional[int] = None):
-        stmt = self._db_session.query(self.__model__)
+    def get_by_id(self, pk: int) -> T:
+        return self._db_session.query(self.__model__).get_or_404(pk)
+
+    def get_all(self, page: Optional[int] = None) -> List[T]:
+        stmt: BaseQuery = self._db_session.query(self.__model__)
         if page:
-            limit, offset = self._get_limit_and_offset(page)
-            stmt = stmt.limit(limit).offset(offset)
+            return stmt.paginate(page, self._items_per_page).items
         return stmt.all()
-
-    @staticmethod
-    def _get_limit_and_offset(page: int) -> Tuple[int, int]:
-        limit = current_app.config['ITEMS_PER_PAGE']
-        offset = 0 if page < 1 else limit * (page - 1)
-        return limit, offset
