@@ -12,7 +12,7 @@ class BaseProjectException(Exception):
         self.code = code
 
 
-class NotFoundErro(BaseProjectException):
+class NotFoundError(BaseProjectException):
     def __init__(self, message: str = 'Not Found'):
         super().__init__(message, code=HTTPStatus.NOT_FOUND)
 

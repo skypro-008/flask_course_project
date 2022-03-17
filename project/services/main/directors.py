@@ -1,15 +1,15 @@
 from typing import List
 
-from project.dao.director import DirectorDAO
-from project.exceptions import DirectorNotFoundException
+from project.dao import DirectorDAO
+from project.errors import NotFoundError
 from project.models import Director
-from project.services import ItemServiceBase
+from project.services.base import BaseService
 
 
-class DirectorsService(ItemServiceBase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.dao = DirectorDAO(self._db_session)
+class DirectorsService(BaseService):
+    def __init__(self, db_session):
+        super().__init__(db_session)
+        self.dao = DirectorDAO(db_session)
 
     def get_all(self, page: int = None) -> List[Director]:
         if page is None:
@@ -19,5 +19,5 @@ class DirectorsService(ItemServiceBase):
 
     def get_item(self, pk: int) -> Director:
         if not (director := self.dao.get_by_id(pk)):
-            raise DirectorNotFoundException
+            raise NotFoundError('Director not found')
         return director

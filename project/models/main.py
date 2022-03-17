@@ -1,4 +1,5 @@
-from project.setup_db import Base, db
+from project.setup import db
+from project.setup.db.models import Base
 
 
 class Director(Base):

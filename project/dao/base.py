@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 
 from flask import current_app
 
-from project.setup_db import Base
+from project.setup.db.models import Base
 
 
 class BaseDAO(ABC):

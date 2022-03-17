@@ -1,15 +1,11 @@
-from flask_restx import fields, Namespace, Resource
+from flask_restx import Namespace, Resource
 
-from project.services.items import DirectorsService, GenresService, MoviesService
-from project.setup_db import db
-from project.views.dto import movie_state_parser, pages_parser
-from project.views.err import error
+from project.services.main import DirectorsService, GenresService, MoviesService
+from project.setup import db
+from project.setup.api.models import director, error, genre, movie
+from project.setup.api.parsers import movie_state_parser, pages_parser
 
-genres_ns = Namespace('genres', validate=True)
-genre = genres_ns.model('Жанр', {
-    'id': fields.Integer,
-    'name': fields.String,
-})
+genres_ns = Namespace('genres')
 
 
 @genres_ns.route('/')
@@ -34,11 +30,7 @@ class GenreView(Resource):
         return GenresService(db.session).get_item(genre_id)
 
 
-directors_ns = Namespace('directors', validate=True)
-director = directors_ns.model('Режиссер', {
-    'id': fields.Integer,
-    'name': fields.String,
-})
+directors_ns = Namespace('directors')
 
 
 @directors_ns.route('/')
@@ -63,11 +55,7 @@ class DirectorView(Resource):
         return DirectorsService(db.session).get_item(director_id)
 
 
-movies_ns = Namespace('movies', validate=True)
-movie = directors_ns.model('Фильм', {
-    'id': fields.Integer,
-    'name': fields.String,
-})
+movies_ns = Namespace('movies')
 
 
 @movies_ns.route('/')

@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from project.dao.base import BaseDAO
 from project.errors import ConflictError
 from project.models import Movie, User
-from project.services.schemas import UserSchema
+# from project.services.schemas import UserSchema
 
 
 class UserDAO(BaseDAO):
@@ -45,13 +45,13 @@ class UserDAO(BaseDAO):
             return user.favorites[offset: offset + limit]
         return user.favorites
 
-    def update_user_info(self, user_id: int, **kwargs) -> User:
-        self._db_session.query(User).filter(User.id == user_id).update(
-            UserSchema().load(kwargs, partial=('email', 'password'))
-        )
-        self._db_session.commit()
-
-        return User.query.get(user_id)
+    # def update_user_info(self, user_id: int, **kwargs) -> User:
+    #     self._db_session.query(User).filter(User.id == user_id).update(
+    #         UserSchema().load(kwargs, partial=('email', 'password'))
+    #     )
+    #     self._db_session.commit()
+    #
+    #     return User.query.get(user_id)
 
     def update_user_password(self, user_id: int, password: str) -> None:
         self._db_session.query(User).filter(User.id == user_id).update({

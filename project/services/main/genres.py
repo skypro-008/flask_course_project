@@ -1,19 +1,19 @@
 from typing import List
 
 from project.dao import GenreDAO
-from project.exceptions import GenreNotFoundException
+from project.errors import NotFoundError
 from project.models import Genre
-from project.services import ItemServiceBase
+from project.services.base import BaseService
 
 
-class GenresService(ItemServiceBase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.dao = GenreDAO(self._db_session)
+class GenresService(BaseService):
+    def __init__(self, db_session):
+        super().__init__(db_session)
+        self.dao = GenreDAO(db_session)
 
     def get_item(self, pk: int) -> Genre:
         if not (genre := self.dao.get_by_id(pk)):
-            raise GenreNotFoundException
+            raise NotFoundError('Genre not found')
         return genre
 
     def get_all(self, page: int = None) -> List[Genre]:

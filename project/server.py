@@ -2,26 +2,12 @@ import logging
 
 from flask import Flask
 from flask_cors import CORS
-from flask_restx import Api
 
 from project.config import get_config
-from project.exceptions import BaseProjectException
-from project.setup_db import db
-from project.views import (auth_ns, directors_ns, favorites_ns, genres_ns,
-                           movies_ns, user_ns)
-from project.views.err import error_ns
+from project.errors import BaseProjectException
+from project.setup import api, db
+from project.views import directors_ns, genres_ns, movies_ns
 
-api = Api(
-    authorizations={
-        'Bearer': {'type': 'apiKey', 'in': 'header', 'name': 'Authorization'}
-    },
-    title='Flask Course Project 3',
-    description='Welcome to the Swagger UI documentation site!',
-    doc='/ui',
-    contact_email='painassasin@icloud.com',
-    contact_url='https://github.com/painassasin',
-    version='1.3.3',
-)
 cors = CORS()
 
 
@@ -34,13 +20,13 @@ def create_app(config_name: str):
     db.init_app(app)
     api.init_app(app)
 
-    api.add_namespace(auth_ns)
+    # api.add_namespace(auth_ns)
     api.add_namespace(directors_ns)
-    api.add_namespace(favorites_ns)
+    # api.add_namespace(favorites_ns)
     api.add_namespace(movies_ns)
     api.add_namespace(genres_ns)
-    api.add_namespace(user_ns)
-    api.add_namespace(error_ns)
+
+    # api.add_namespace(user_ns)
 
     @api.errorhandler(BaseProjectException)
     def handle_validation_error(error):

@@ -1,37 +1,36 @@
+import json
 import os
 from contextlib import suppress
+from typing import Any, Dict, List, Type
 
 from sqlalchemy.exc import IntegrityError
 
 from project.models import Director, Genre, Movie
 from project.server import create_app
-from project.setup_db import db
-from project.utils.utils import read_json
+from project.setup import db
+from project.setup.db.models import Base
 
 app = create_app(os.getenv("FLASK_ENV", "development"))
 
-data = read_json("fixtures.json")
 
-with app.app_context():
-    for director in data["directors"]:
-        db.session.add(Director(id=director["pk"], name=director["name"]))
+def read_json(filename: str, encoding: str = 'utf-8'):
+    with open(filename, encoding=encoding) as f:
+        return json.load(f)
 
-    for genre in data["genres"]:
-        db.session.add(Genre(id=genre["pk"], name=genre["name"]))
 
-    for movie in data["movies"]:
-        db.session.add(
-            Movie(
-                id=movie["pk"],
-                title=movie["title"],
-                description=movie["description"],
-                trailer=movie["trailer"],
-                year=movie["year"],
-                rating=movie["rating"],
-                genre_id=movie["genre_id"],
-                director_id=movie["director_id"],
-            )
-        )
+def load_data(data: List[Dict[str, Any]], model: Type[Base]) -> None:
+    for item in data:
+        item['id'] = item.pop('pk')
+        db.session.add(model(**item))
 
-    with suppress(IntegrityError):
-        db.session.commit()
+
+if __name__ == '__main__':
+    data: Dict[str, List[Dict[str, Any]]] = read_json("fixtures.json")
+
+    with app.app_context():
+        load_data(data['directors'], Director)
+        load_data(data['genres'], Genre)
+        load_data(data['movies'], Movie)
+
+        with suppress(IntegrityError):
+            db.session.commit()

@@ -1,9 +1,8 @@
 import os
 
 from project.server import create_app
-from project.setup_db import db
+from project.setup import db
 
-app = create_app(os.getenv("FLASK_ENV", "development"))
-
-with app.app_context():
-    db.create_all()
+if __name__ == '__main__':
+    with create_app(os.getenv("FLASK_ENV", "development")).app_context():
+        db.create_all()
