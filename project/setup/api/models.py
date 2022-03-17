@@ -2,9 +2,9 @@ from flask_restx import fields, Model
 
 from project.setup.api import api
 
-# TODO: Добавить примеров https://flask-restx.readthedocs.io/en/latest/swagger.html
 error: Model = api.model('Сообщение об ошибке', {
     'message': fields.String(required=True, example='Error description'),
+    'errors': fields.Wildcard(fields.String(), required=False)
 })
 
 genre: Model = api.model('Жанр', {
@@ -30,4 +30,17 @@ movie: Model = api.model('Фильм', {
     'rating': fields.Float(required=True, min=0.0, max=10.0, example=8.6),
     'genre': fields.Nested(genre, required=True),
     'director': fields.Nested(director, required=True),
+})
+
+user_profile = api.model('Профиль пользователя', {
+    'id': fields.Integer(required=True),
+    'email': fields.String(required=True),
+    'name': fields.String,
+    'surname': fields.String,
+    'favourite_genre': fields.Integer,
+})
+
+tokens = api.model('Access и Refresh токены', {
+    'access_token': fields.String(required=True),
+    'refresh_token': fields.String(required=True),
 })

@@ -1,13 +1,40 @@
+from typing import Optional
+
+from sqlalchemy.exc import IntegrityError
+
 from project.dao.base import BaseDAO
+from project.errors import ConflictError
 from project.models import User
 
 
-# from project.services.schemas import UserSchema
-
-
 class UserDAO(BaseDAO[User]):
-    # TODO: Стремная какая-то херня, надо поправить бы юзера
+    """
+    TODO: Стремная какая-то херня, надо поправить бы юзера
+    """
     __model__ = User
+
+    def create(self, email: str, password: str) -> User:
+        obj = User(email=email, password=password)
+        try:
+            self._db_session.add(obj)
+            self._db_session.commit()
+        except IntegrityError:
+            raise ConflictError('User with this email already exists. Choose the diffrent email address.')
+        return obj
+
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        return self._db_session.query(User).filter(User.email == email).one_or_none()
+
+    def update(self, user_id: int, **kwargs) -> User:
+        self._db_session.query(User).filter(User.id == user_id).update(kwargs)
+        self._db_session.commit()
+        return self.get_by_id(user_id)
+
+    def update_password(self, user_id: int, password: str) -> None:
+        self._db_session.query(User).filter(User.id == user_id).update({
+            'password': password
+        })
+        self._db_session.commit()
 
     # def add_movie_to_favorites(self, user_id: int, movie_id: int) -> None:
     #     # TODO: Чет херня какая-то
@@ -35,28 +62,3 @@ class UserDAO(BaseDAO[User]):
     #         return user.favorites[offset: offset + limit]
     #     return user.favorites
     #
-    # # def update_user_info(self, user_id: int, **kwargs) -> User:
-    # #     self._db_session.query(User).filter(User.id == user_id).update(
-    # #         UserSchema().load(kwargs, partial=('email', 'password'))
-    # #     )
-    # #     self._db_session.commit()
-    # #
-    # #     return User.query.get(user_id)
-    #
-    # def update_user_password(self, user_id: int, password: str) -> None:
-    #     self._db_session.query(User).filter(User.id == user_id).update({
-    #         'password': password
-    #     })
-    #     self._db_session.commit()
-    #
-    # def get_user_by_email(self, email: str) -> Optional[User]:
-    #     return self._db_session.query(User).filter(User.email == email).one_or_none()
-    #
-    # def create(self, email: str, password: str) -> User:
-    #     obj = User(email=email, password=password)
-    #     try:
-    #         self._db_session.add(obj)
-    #         self._db_session.commit()
-    #     except IntegrityError:
-    #         raise ConflictError('User with this email already exists. Choose the diffrent email address.')
-    #     return obj

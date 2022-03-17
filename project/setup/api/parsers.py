@@ -18,4 +18,8 @@ page_parser: RequestParser = RequestParser()
 page_parser.add_argument(name='page', type=int, location='args', required=False)
 
 movie_state_and_page_parser: RequestParser = page_parser.copy()
-movie_state_and_page_parser.add_argument('state', choices=('new',), required=False, help="Only have to be 'new'")
+movie_state_and_page_parser.add_argument(name='state', choices=('new',), required=False, help="Only have to be 'new'")
+
+tokens_parser: RequestParser = RequestParser()
+tokens_parser.add_argument(name='accesss_token', type=str, required=False)
+tokens_parser.add_argument(name='refresh_token', type=str, required=True)

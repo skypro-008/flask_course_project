@@ -13,6 +13,7 @@ class Genre(models.Base):
 
     name = db.Column(db.String(100), unique=True, nullable=False)
     movies = db.relationship('Movie', back_populates='genre', cascade='delete')
+    users = db.relationship('User', back_populates='genre')
 
 
 class Movie(models.Base):
@@ -44,6 +45,7 @@ class User(models.Base):
     name = db.Column(db.String(50), nullable=True)
     surname = db.Column(db.String(50), nullable=True)
     favourite_genre = db.Column(db.Integer, db.ForeignKey('genres.id'), nullable=True)
+    genre = db.relationship('Genre', back_populates='users')
     favorites = db.relationship(
         Movie,
         secondary=favorite,
