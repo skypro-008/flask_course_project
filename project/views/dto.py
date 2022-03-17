@@ -25,3 +25,5 @@ movie_state_parser = pages_parser.copy()
 movie_state_parser.add_argument(
     'state', choices=('new',), required=False, help="Only have to be 'new'"
 )
+
+

@@ -23,7 +23,7 @@ class ItemServiceBase(BaseService):
     def get_item(self, pk: int) -> dict:
         if not self.dao.get_by_id(pk):
             raise self.not_found_exception
-        return self.schema().dump(self.dao.get_by_id(pk))
+        return self.dao.get_by_id(pk)
 
     def get_all(self, **kwargs) -> List[dict]:
         return self.schema(many=True).dump(self.dao.get_all(page=kwargs.get('page')))
