@@ -6,4 +6,4 @@ __pycache__
 .mypy_cache/
 *.db
 .coverage
-.coverage.xml
+coverage.xml

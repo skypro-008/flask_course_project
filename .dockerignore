@@ -1,6 +1,0 @@
-.github
-.mypy_cache
-.pytest_cache
-.env
-.gitignore
-README.md

@@ -4,9 +4,11 @@ Flask-CORS~=3.0.10
 Flask-SQLAlchemy~=2.5.1
 marshmallow~=3.14.1
 PyJWT~=2.3.0
+psycopg2
 gunicorn
 freezegun
 pytest
 pytest-cov
 mypy
+types-freezegun
 flake8
