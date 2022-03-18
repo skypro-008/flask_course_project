@@ -7,7 +7,7 @@ from project.config import get_config
 from project.errors import BaseProjectException
 from project.setup.api import api
 from project.setup.db import db
-from project.views import auth_ns, directors_ns, genres_ns, movies_ns, user_ns
+from project.views import auth_ns, directors_ns, favorites_ns, genres_ns, movies_ns, user_ns
 
 
 def create_app(config_name: str) -> Flask:
@@ -25,6 +25,7 @@ def create_app(config_name: str) -> Flask:
     api.add_namespace(genres_ns)
     api.add_namespace(auth_ns)
     api.add_namespace(user_ns)
+    api.add_namespace(favorites_ns)
 
     @api.errorhandler(BaseProjectException)
     def handle_validation_error(error: BaseProjectException):

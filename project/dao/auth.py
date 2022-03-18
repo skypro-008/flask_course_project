@@ -1,16 +1,14 @@
-from typing import Optional
+from contextlib import suppress
+from typing import List, Optional, Tuple
 
 from sqlalchemy.exc import IntegrityError
 
 from project.dao.base import BaseDAO
 from project.errors import ConflictError
-from project.models import User
+from project.models import Movie, User
 
 
 class UserDAO(BaseDAO[User]):
-    """
-    TODO: Стремная какая-то херня, надо поправить бы юзера
-    """
     __model__ = User
 
     def create(self, email: str, password: str) -> User:
@@ -36,29 +34,29 @@ class UserDAO(BaseDAO[User]):
         })
         self._db_session.commit()
 
-    # def add_movie_to_favorites(self, user_id: int, movie_id: int) -> None:
-    #     # TODO: Чет херня какая-то
-    #     user = User.query.get(user_id)
-    #     movie = Movie.query.get(movie_id)
-    #
-    #     user.favorites.append(movie)
-    #     self._db_session.commit()
-    #
-    # def remote_from_favorites(self, user_id: int, movie_id: int) -> None:
-    #     # TODO: Чет херня какая-то
-    #     user = User.query.get(user_id)
-    #     movie = Movie.query.get(movie_id)
-    #
-    #     with suppress(ValueError):
-    #         user.favorites.remove(movie)
-    #         self._db_session.commit()
-    #
-    # def get_favorites(self, user_id: int, page: Optional[int] = None) -> List[Movie]:
-    #     if not (user := self._db_session.query(User).filter(User.id == user_id).one_or_none()):
-    #         return []
-    #
-    #     if page:
-    #         limit, offset = self._get_limit_and_offset(page)
-    #         return user.favorites[offset: offset + limit]
-    #     return user.favorites
-    #
+    def __get_limit_and_offset(self, page: int) -> Tuple[int, int]:
+        limit = self._items_per_page
+        offset = 0 if page < 1 else limit * (page - 1)
+        return limit, offset
+
+    def get_favorite_moveis(self, user_id: int, page: Optional[int] = None) -> List[Movie]:
+        user = self.get_by_id(user_id)
+        if page:
+            limit, offset = self.__get_limit_and_offset(page)
+            return user.favorites[offset: offset + limit]
+        return user.favorites
+
+    def add_movie_to_favorites(self, user_id: int, movie_id: int) -> None:
+        user = self.get_by_id(user_id)
+        movie = self._db_session.query(Movie).get_or_404(movie_id)
+
+        user.favorites.append(movie)
+        self._db_session.commit()
+
+    def remote_movie_from_favorites(self, user_id: int, movie_id: int) -> None:
+        user = self.get_by_id(user_id)
+        movie = self._db_session.query(Movie).get_or_404(movie_id)
+
+        with suppress(ValueError):
+            user.favorites.remove(movie)
+            self._db_session.commit()

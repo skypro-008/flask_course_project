@@ -14,8 +14,8 @@ api = Namespace('user')
 @api.response(code=404, description='Bad request', model=error)
 @api.route('/')
 class UserProfileView(Resource):
+
     @api.marshal_with(user_profile, code=200, description='OK')
-    @api.response(code=404, description='User not exists', model=error)
     @login_required
     def get(self, user_id: int):
         """
@@ -25,7 +25,7 @@ class UserProfileView(Resource):
 
     @api.expect(change_user_info_parser)
     @api.marshal_with(user_profile, code=200, description='OK')
-    @api.response(code=404, description='User or Genre not exists', model=error)
+    @api.response(code=404, description='Genre not exists', model=error)
     @login_required
     def patch(self, user_id: int):
         """
@@ -39,9 +39,9 @@ class UserProfileView(Resource):
 @api.response(code=404, description='Bad request', model=error)
 @api.route('/password')
 class ChangePasswordView(Resource):
+
     @api.expect(change_password_parser)
     @api.response(code=200, description='Ok')
-    @api.response(code=404, description='User not exists', model=error)
     @login_required
     def put(self, user_id: int):
         """

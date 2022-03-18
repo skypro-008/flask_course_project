@@ -11,6 +11,7 @@ api = Namespace('auth')
 
 @api.route('/register')
 class RegisterUserView(Resource):
+
     @api.expect(auth_parser)
     @api.response(code=201, description='Created', headers={'Location': 'The URL of a newly created user'})
     @api.response(code=400, description='Bad request', model=error)
@@ -26,6 +27,7 @@ class RegisterUserView(Resource):
 @api.route('/login')
 @api.response(code=401, description='Invalid credentials', model=error)
 class LoginUserView(Resource):
+
     @api.expect(auth_parser)
     @api.marshal_with(tokens, code=200, description='OK')
     @api.response(code=400, description='Bad request', model=error)

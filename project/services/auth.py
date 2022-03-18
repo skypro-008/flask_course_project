@@ -53,10 +53,6 @@ class AuthService(BaseService):
             return JwtToken(data).get_tokens()
 
     def update_user_profile(self, user_id: int, **kwargs) -> User:
-
-        # Проверяем, что пользователь существует
-        self.dao.get_by_id(pk=user_id)
-
         data = {}
         if favourite_genre_id := kwargs.get('favourite_genre'):
             # Проверяем существование жанра
