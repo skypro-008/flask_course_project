@@ -12,7 +12,7 @@ api = Namespace('user')
 @api.doc(security='Bearer')
 @api.response(code=401, description='Authorization needed', model=error)
 @api.response(code=404, description='Bad request', model=error)
-@api.route('/')
+@api.route('/', endpoint='profile_view')
 class UserProfileView(Resource):
 
     @api.marshal_with(user_profile, code=200, description='OK')

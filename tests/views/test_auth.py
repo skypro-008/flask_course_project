@@ -4,11 +4,6 @@ import pytest
 from freezegun import freeze_time
 
 from project.dao import UserDAO
-from project.exceptions import (
-    InvalidCredentials,
-    InvalidOrExpiredRefreshToken,
-    UserAlreadyExists,
-)
 from project.utils.security import generate_password_hash
 
 
@@ -24,7 +19,7 @@ class FormMixin:
 
 
 class TestRegisterUserView(FormMixin):
-    url = "/auth/register"
+    url = "/auth/register/"
 
     def test_view(self, client):
         response = self.send_form_request(
@@ -46,12 +41,11 @@ class TestRegisterUserView(FormMixin):
         assert response_1.status_code == HTTPStatus.CREATED
 
         response_2 = self.send_form_request(client, "post", form_data)
-        assert response_2.status_code == UserAlreadyExists.code
-        assert response_2.json == UserAlreadyExists.message
+        assert response_2.status_code == 409
 
 
 class TestLoginUserView(FormMixin):
-    url = "/auth/login"
+    url = "/auth/login/"
 
     @pytest.fixture
     def credentials(self):
@@ -71,14 +65,12 @@ class TestLoginUserView(FormMixin):
 
     def test_user_not_found(self, client, credentials):
         response = self.send_form_request(client, "post", credentials)
-        assert response.status_code == InvalidCredentials.code
-        assert response.json == InvalidCredentials.message
+        assert response.status_code == 401
 
     def test_invalid_password(self, client, user, credentials):
         credentials["password"] = credentials["password"] * 2
         response = self.send_form_request(client, "post", credentials)
-        assert response.status_code == InvalidCredentials.code
-        assert response.json == InvalidCredentials.message
+        assert response.status_code == 401
 
     def test_update_token_success(self, client, user, credentials):
         @freeze_time("2021-06-30T10:30:20")
@@ -109,13 +101,10 @@ class TestLoginUserView(FormMixin):
         @freeze_time("2022-06-30T10:30:20")
         def put_response(data) -> dict:
             response = client.put(self.url, json=data)
-            assert response.status_code == InvalidOrExpiredRefreshToken.code
+            assert response.status_code == 401
             return response.json
 
-        assert (
-            put_response(post_response(credentials))
-            == InvalidOrExpiredRefreshToken.message
-        )
+        assert put_response(post_response(credentials)) == {'message': 'Expired refresh token'}
 
     def test_invalid_refresh_token(self, client, user, credentials):
         response = client.put(
@@ -123,5 +112,5 @@ class TestLoginUserView(FormMixin):
             json={"access_token": "access_token", "refresh_token": "refresh_token"},
         )
 
-        assert response.status_code == InvalidOrExpiredRefreshToken.code
-        assert response.json == InvalidOrExpiredRefreshToken.message
+        assert response.status_code == 401
+        assert response.json == {'message': 'Expired refresh token'}

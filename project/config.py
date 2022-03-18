@@ -18,7 +18,7 @@ class BaseConfig:
     PWD_HASH_SALT: bytes = base64.b64decode(os.getenv('HASH_SALT', 'salt'))
     PWD_HASH_ITERATIONS: int = 100_000
 
-    ERROR_404_HELP = False
+    RESTX_ERROR_404_HELP = False
     RESTX_VALIDATE = True
     RESTX_MASK_SWAGGER = False
     RESTX_JSON = {

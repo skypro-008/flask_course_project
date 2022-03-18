@@ -7,3 +7,6 @@ PyJWT~=2.3.0
 gunicorn
 freezegun
 pytest
+pytest-cov
+mypy
+flake8

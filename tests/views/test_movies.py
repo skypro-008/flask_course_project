@@ -8,12 +8,13 @@ class TestMoviesView:
         response = client.get("/movies/?state=old")
         assert response.status_code == HTTPStatus.BAD_REQUEST
 
-    @pytest.mark.parametrize("page, resp_length", [(1, 3), (4, 1), (5, 0)])
-    def test_pages(self, app, client, movies, page, resp_length):
+    @pytest.mark.parametrize("page, resp_length, status", [(1, 3, 200), (4, 1, 200), (5, 0, 404)])
+    def test_pages(self, app, client, movies, page, resp_length, status):
         app.config["ITEMS_PER_PAGE"] = 3
         response = client.get(f"/movies/?page={page}")
-        assert response.status_code == HTTPStatus.OK
-        assert len(response.json) == resp_length
+        assert response.status_code == status
+        if resp_length:
+            assert len(response.json) == resp_length
 
     def test_success_state(self, client, movies):
         response_1 = client.get("/movies/?state=new")

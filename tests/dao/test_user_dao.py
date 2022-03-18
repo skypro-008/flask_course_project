@@ -1,8 +1,8 @@
 import pytest
 
 from project.dao import UserDAO
+from project.errors import ConflictError
 from project.models import User
-from project.exceptions import UserAlreadyExists
 
 
 class TestUserDAO:
@@ -19,6 +19,6 @@ class TestUserDAO:
         assert User.query.get(new_user.id) == new_user
 
     def test_create_user_with_existing_email(self, db):
-        with pytest.raises(UserAlreadyExists):
+        with pytest.raises(ConflictError):
             for _ in range(2):
                 UserDAO(db.session).create(email="test@test.com", password="password")

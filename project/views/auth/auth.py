@@ -21,7 +21,7 @@ class RegisterUserView(Resource):
         Register a new user.
         """
         AuthService(db.session).register_user(**auth_parser.parse_args())
-        return None, 201, {'Location': url_for('user_user_profile_view')}
+        return None, 201, {'Location': url_for('profile_view')}
 
 
 @api.route('/login/')

@@ -1,9 +1,7 @@
 import os
-from http import HTTPStatus
 
 import pytest
 
-from project.exceptions import UpdatePasswordException
 from project.utils.security import generate_password_hash
 
 
@@ -11,11 +9,11 @@ class TestUserProfileView:
     url = "/user/"
 
     def test_unauthorized(self, user, client):
-        assert client.get(self.url).status_code == HTTPStatus.UNAUTHORIZED
+        assert client.get(self.url).status_code == 401
 
     def test_get_profile_success(self, user, client, login_headers):
         response = client.get(self.url, headers=login_headers)
-        assert response.status_code == HTTPStatus.OK
+        assert response.status_code == 200
         assert response.json == {
             "email": user.email,
             "favourite_genre": None,
@@ -34,7 +32,7 @@ class TestUserProfileView:
     )
     def test_update_user_data(self, data, new_data, user, client, login_headers):
         response = client.patch(self.url, json=data, headers=login_headers)
-        assert response.status_code == HTTPStatus.OK
+        assert response.status_code == 200
         assert response.json["name"] == (data["name"] if data["name"] else None)
         if new_data:
             response = client.patch(self.url, json=new_data, headers=login_headers)
@@ -42,7 +40,7 @@ class TestUserProfileView:
 
 
 class TestChangePasswordView:
-    url = "/user/password"
+    url = "/user/password/"
 
     def test_change_password(self, db, user, client, login_headers):
         old_password = os.urandom(10).hex()
@@ -56,7 +54,7 @@ class TestChangePasswordView:
             headers=login_headers,
             json={"old_password": old_password, "new_password": new_password},
         )
-        assert response.status_code == HTTPStatus.OK
+        assert response.status_code == 200
         assert not response.json
 
         db.session.refresh(user)
@@ -68,5 +66,4 @@ class TestChangePasswordView:
             headers=login_headers,
             json={"old_password": "123", "new_password": "321"},
         )
-        assert response.status_code == HTTPStatus.BAD_REQUEST
-        assert response.json == UpdatePasswordException.message
+        assert response.status_code == 400

@@ -3,8 +3,6 @@ from random import choice, randint
 
 import pytest
 
-from project.services.schemas import MovieSchema
-
 
 class TestFavoritesView:
     url = "/favorites/movies/"
@@ -23,39 +21,25 @@ class TestFavoritesView:
     ):
         response = client.get(self.url, headers=login_headers)
         assert response.status_code == HTTPStatus.OK
-        assert response.json == MovieSchema(many=True).dump(movies)
+        assert len(response.json) == 10
 
 
 class TestManageFavoriteView:
-    url = "/favorites/movies/{movie_id}"
+    url = "/favorites/movies/{movie_id}/"
 
     def test_unauthorized(self, client):
-        assert (
-            client.post(self.url.format(movie_id=randint(1, 100))).status_code
-            == HTTPStatus.UNAUTHORIZED
-        )
-        assert (
-            client.delete(self.url.format(movie_id=randint(1, 100))).status_code
-            == HTTPStatus.UNAUTHORIZED
-        )
+        assert client.post(self.url.format(movie_id=randint(1, 100))).status_code == 401
+        assert client.delete(self.url.format(movie_id=randint(1, 100))).status_code == 401
 
     def test_movie_not_found(self, user, client, login_headers):
-        assert (
-            client.post(self.url.format(movie_id=1), headers=login_headers).status_code
-            == HTTPStatus.NOT_FOUND
-        )
-        assert (
-            client.delete(
-                self.url.format(movie_id=1), headers=login_headers
-            ).status_code
-            == HTTPStatus.NOT_FOUND
-        )
+        assert client.post(self.url.format(movie_id=1), headers=login_headers).status_code == 404
+        assert client.delete(
+            self.url.format(movie_id=1), headers=login_headers
+        ).status_code == 404
 
     def test_add_movie_to_favorites(self, user, client, movies, login_headers):
         movie = choice(movies)
-        response = client.post(
-            self.url.format(movie_id=movie.id), headers=login_headers
-        )
+        response = client.post(self.url.format(movie_id=movie.id), headers=login_headers)
         assert response.status_code == HTTPStatus.OK
         assert response.json is None
         assert movie in user.favorites
@@ -67,5 +51,5 @@ class TestManageFavoriteView:
         response = client.delete(
             self.url.format(movie_id=movie.id), headers=login_headers
         )
-        assert response.status_code == HTTPStatus.NO_CONTENT
+        assert response.status_code == 204
         assert movie not in user.favorites

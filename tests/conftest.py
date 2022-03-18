@@ -3,8 +3,8 @@ import pytest
 from project.dao import UserDAO
 from project.models import Director, Genre, Movie
 from project.server import create_app
-from project.services.schemas import UserSchema
-from project.setup_db import db as database
+from project.services.auth import UserSchema
+from project.setup.db import db as database
 from project.utils.jwt_token import JwtToken
 from project.utils.security import generate_password_hash
 
