@@ -1,0 +1,14 @@
+.github
+tests
+.coverage
+.flake8
+.gitignore
+mypy.ini
+Procfile
+README.md
+.mypy_cache
+.pytest_cache
+venv/
+__pycache__
+app.db
+docker-compose.yaml

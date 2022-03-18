@@ -1,26 +1,30 @@
-FROM python:3.9-slim
+FROM python:3.9-alpine3.14
+MAINTAINER Vadim Mescheryakov <painassasin@icloud.com>
 
-WORKDIR /opt/flask_course_project
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLASK_APP=run.py \
+    FLASK_ENV=production \
+    PROJECT_DIR=/opt/backend
 
-ENV PIP_DISABLE_PIP_VERSION_CHECK=on
-ENV PIP_NO_CACHE_DIR=off
-ENV FLASK_APP=run.py
+RUN adduser -D user
 
-COPY requirements.txt .
+RUN apk update; \
+    apk add --no-cache libpq; \
+    apk add --no-cache --virtual .build-deps gcc postgresql-dev python3-dev musl-dev
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    build-essential \
-      libpq-dev \
-    && apt-get autoclean && apt-get autoremove \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*  \
-    && pip install -r requirements.txt
+COPY requirements.txt requirements.txt
+RUN python3 -m pip install --upgrade pip; \
+    pip install --no-cache-dir -r requirements.txt; \
+    apk del .build-deps
 
+WORKDIR $PROJECT_DIR
 
-COPY *.py .
-COPY fixtures.json .
-COPY entrypoint.sh .
+COPY . .
+RUN chown user:user -R ${PROJECT_DIR}; \
+    chmod 755 -R ${PROJECT_DIR}; \
+    chmod +x ${PROJECT_DIR}/entrypoint.sh
 
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["/opt/app/entrypoint.sh"]
+ENTRYPOINT ["sh", "entrypoint.sh"]
+CMD ["gunicorn", "run:app", "--bind", "0.0.0.0:5000"]
+EXPOSE 5000

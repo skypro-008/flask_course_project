@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:13.0-alpine
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend_nw
+
+  api:
+    build:
+      context: .
+    image: painassasin/fcp_3:alpine
+    environment:
+      DB_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db/postgres
+    ports:
+      - 80:5000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backend_nw
+
+networks:
+  backend_nw:
+
+
+
+
