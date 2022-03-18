@@ -9,7 +9,7 @@ from project.setup.db import db
 api = Namespace('auth')
 
 
-@api.route('/register')
+@api.route('/register/')
 class RegisterUserView(Resource):
 
     @api.expect(auth_parser)
@@ -24,7 +24,7 @@ class RegisterUserView(Resource):
         return None, 201, {'Location': url_for('user_user_profile_view')}
 
 
-@api.route('/login')
+@api.route('/login/')
 @api.response(code=401, description='Invalid credentials', model=error)
 class LoginUserView(Resource):
 

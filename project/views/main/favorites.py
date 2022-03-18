@@ -27,7 +27,7 @@ class FavoritesView(Resource):
 @api.doc(security='Bearer')
 @api.response(401, 'Auth required')
 @api.response(404, 'Movie not found')
-@api.route('/movies/<int:movie_id>')
+@api.route('/movies/<int:movie_id>/')
 class ManageFavoriteView(Resource):
 
     @api.response(200, 'OK')

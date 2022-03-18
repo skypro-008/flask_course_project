@@ -37,7 +37,7 @@ class UserProfileView(Resource):
 @api.doc(security='Bearer')
 @api.response(code=401, description='Authorization needed', model=error)
 @api.response(code=404, description='Bad request', model=error)
-@api.route('/password')
+@api.route('/password/')
 class ChangePasswordView(Resource):
 
     @api.expect(change_password_parser)

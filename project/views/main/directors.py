@@ -19,7 +19,7 @@ class DirectorsView(Resource):
         return DirectorsService(db.session).get_all(**page_parser.parse_args())
 
 
-@api.route('/<int:director_id>')
+@api.route('/<int:director_id>/')
 class DirectorView(Resource):
     @api.response(404, 'Not Found', error)
     @api.marshal_with(director, code=200, description='OK')

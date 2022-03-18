@@ -19,7 +19,7 @@ class GenresView(Resource):
         return GenresService(db.session).get_all(**page_parser.parse_args())
 
 
-@api.route('/<int:genre_id>')
+@api.route('/<int:genre_id>/')
 class GenreView(Resource):
     @api.response(404, 'Not Found', error)
     @api.marshal_with(genre, code=200, description='OK')

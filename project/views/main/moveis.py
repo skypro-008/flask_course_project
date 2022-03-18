@@ -19,7 +19,7 @@ class MoviesView(Resource):
         return MoviesService(db.session).get_all(**movie_state_and_page_parser.parse_args())
 
 
-@api.route('/<int:movie_id>')
+@api.route('/<int:movie_id>/')
 class MovieView(Resource):
     @api.response(404, 'Not Found', error)
     @api.marshal_with(movie, code=200, description='OK')
